@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import ResultsList from './ResultsList';
 
 type Props = {
   searchTerm: string;
@@ -57,7 +58,11 @@ class Results extends Component<Props, State> {
         <ul>
           {!this.state.isLoading &&
             this.state.dataList.map((product) => (
-              <li key={product.id}>{product.title}</li>
+              <ResultsList
+                key={product.id}
+                title={product.title}
+                description={product.description}
+              />
             ))}
         </ul>
       </div>
