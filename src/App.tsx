@@ -2,10 +2,15 @@ import { Component } from 'react';
 import Container from './components/Container';
 import Button from './components/Button';
 import Search from './components/Search';
+import Results from './components/Results';
 
 export type Props = Record<string, never>;
 
-class App extends Component {
+type State = {
+  searchTerm: string;
+};
+
+class App extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { searchTerm: '' };
@@ -26,7 +31,7 @@ class App extends Component {
           </div>
           <div className="w-full">
             <h1 className="text-xl pb-[10px] text-center">Results</h1>
-            {/* Place for the Results component */}
+            <Results searchTerm={this.state.searchTerm} />
           </div>
           <div className="w-full flex justify-end">
             <Button>Trigger Error</Button>
