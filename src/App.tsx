@@ -3,6 +3,7 @@ import Container from './components/Container';
 import Button from './components/Button';
 import Search from './components/Search';
 import Results from './components/Results';
+import ErrorBoundary from './components/ErrorBoundary';
 
 export type Props = Record<string, never>;
 
@@ -26,10 +27,6 @@ class App extends Component<Props, State> {
     this.setState({ tirggerError: true });
   }
   render() {
-    if (this.state.tirggerError) {
-      throw new Error('Manually triggered error');
-    }
-
     return (
       <main className="bg-amber-200 w-full h-screen flex items-center justify-center">
         <Container>
@@ -37,10 +34,15 @@ class App extends Component<Props, State> {
             <h1 className="text-xl pb-[10px] text-center">Search</h1>
             <Search onSubmit={this.handleSubmit.bind(this)} />
           </div>
-          <div className="w-full">
-            <h1 className="text-xl pb-[10px] text-center">Results</h1>
-            <Results searchTerm={this.state.searchTerm} />
-          </div>
+          <ErrorBoundary>
+            <div className="w-full">
+              <h1 className="text-xl pb-[10px] text-center">Results</h1>
+              <Results
+                searchTerm={this.state.searchTerm}
+                tirggerError={this.state.tirggerError}
+              />
+            </div>
+          </ErrorBoundary>
           <div className="w-full flex justify-end">
             <Button onClick={this.onTriggerError.bind(this)}>
               Trigger Error

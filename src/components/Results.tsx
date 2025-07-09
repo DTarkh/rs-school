@@ -3,6 +3,7 @@ import ResultsList from './ResultsList';
 
 type Props = {
   searchTerm: string;
+  tirggerError: boolean;
 };
 
 export type Item = {
@@ -49,6 +50,9 @@ class Results extends Component<Props, State> {
   }
 
   render() {
+    if (this.props.tirggerError) {
+      throw new Error('Manually triggered error');
+    }
     return (
       <div className="border rounded-md h-[300px] overflow-auto">
         {this.state.isLoading && <p>Loading...</p>}
