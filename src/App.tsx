@@ -8,14 +8,21 @@ import ErrorBoundary from './components/ErrorBoundary';
 export type Props = Record<string, never>;
 
 type State = {
-  searchTerm: string;
+  searchTerm: null | string;
   tirggerError: boolean;
 };
 
 class App extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { searchTerm: '', tirggerError: false };
+    this.state = { searchTerm: null, tirggerError: false };
+  }
+
+  componentDidMount() {
+    const searchTerm = localStorage.getItem('searchTerm');
+    if (searchTerm) {
+      this.setState({ searchTerm: JSON.parse(searchTerm) });
+    }
   }
 
   handleSubmit(value: string) {
@@ -36,11 +43,13 @@ class App extends Component<Props, State> {
           <ErrorBoundary>
             <div className="w-full">
               <h1 className="text-xl pb-[10px] text-center">Results</h1>
-              <Results
-                searchTerm={this.state.searchTerm}
-                tirggerError={this.state.tirggerError}
-                setError={this.setState.bind(this)}
-              />
+              {this.state.searchTerm !== null && (
+                <Results
+                  searchTerm={this.state.searchTerm}
+                  tirggerError={this.state.tirggerError}
+                  setError={this.setState.bind(this)}
+                />
+              )}
             </div>
           </ErrorBoundary>
           <div className="w-full flex justify-end">
