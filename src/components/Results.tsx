@@ -4,6 +4,7 @@ import ResultsList from './ResultsList';
 type Props = {
   searchTerm: string;
   tirggerError: boolean;
+  setError: (state: { tirggerError: boolean }) => void;
 };
 
 export type Item = {
@@ -15,12 +16,13 @@ export type Item = {
 type State = {
   dataList: Item[];
   isLoading: boolean;
+  errorMessage: string | null;
 };
 
 class Results extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { dataList: [], isLoading: false };
+    this.state = { dataList: [], isLoading: false, errorMessage: null };
   }
 
   componentDidMount() {
@@ -39,7 +41,16 @@ class Results extends Component<Props, State> {
     this.setState({ isLoading: true });
 
     fetch(url)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          this.props.setError({ tirggerError: true });
+          this.setState({
+            errorMessage: `Failed to fetch data, status ${res.status}`,
+          });
+          console.error('HTTP error:', res.status);
+        }
+        return res.json();
+      })
       .then((data) =>
         this.setState({ dataList: data.products, isLoading: false })
       )
@@ -51,7 +62,9 @@ class Results extends Component<Props, State> {
 
   render() {
     if (this.props.tirggerError) {
-      throw new Error('Manually triggered error');
+      throw new Error(
+        this.state.errorMessage || 'An undexpected error occurred.'
+      );
     }
     return (
       <div className="border rounded-md h-[300px] overflow-auto">

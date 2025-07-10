@@ -19,7 +19,6 @@ class App extends Component<Props, State> {
   }
 
   handleSubmit(value: string) {
-    console.log('Submitted search:', value);
     localStorage.setItem('searchTerm', JSON.stringify(value));
     this.setState({ searchTerm: value });
   }
@@ -40,6 +39,7 @@ class App extends Component<Props, State> {
               <Results
                 searchTerm={this.state.searchTerm}
                 tirggerError={this.state.tirggerError}
+                setError={this.setState.bind(this)}
               />
             </div>
           </ErrorBoundary>
