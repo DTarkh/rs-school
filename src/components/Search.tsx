@@ -10,11 +10,12 @@ type State = {
   inputValue: string;
 };
 
-const searchTermInLs = JSON.parse(localStorage.getItem('searchTerm') || '""');
-
 class Search extends Component<SubmitProp, State> {
   constructor(props: SubmitProp) {
     super(props);
+    const searchTermInLs = JSON.parse(
+      localStorage.getItem('searchTerm') || '""'
+    );
     this.state = { inputValue: searchTermInLs };
   }
 
@@ -34,12 +35,13 @@ class Search extends Component<SubmitProp, State> {
         onSubmit={this.submitHandler.bind(this)}
       >
         <input
+          data-testid="search-input"
           onChange={this.inputHandler.bind(this)}
           value={this.state.inputValue}
           type="text"
           className="border rounded-md outline-zinc-700 text-zinc-800 px-[10px] py-[3px] w-full"
         />
-        <Button>Search</Button>
+        <Button data-testid="search-button">Search</Button>
       </form>
     );
   }
