@@ -2,6 +2,8 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
+    reporters: ['verbose'],
+    silent: true,
     environment: 'jsdom',
     coverage: {
       include: ['src/**/*.{js,jsx,ts,tsx}'],
