@@ -1,4 +1,12 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  afterEach,
+  vi,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import userEvent from '@testing-library/user-event';
@@ -8,6 +16,14 @@ import App from '../App';
 describe('Main app component', () => {
   afterEach(() => {
     cleanup();
+  });
+
+  beforeAll(() => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterAll(() => {
+    vi.restoreAllMocks();
   });
 
   it('should catche and handles JavaScript errors in child components', async () => {
@@ -48,7 +64,7 @@ describe('Main app component', () => {
     ).toBeInTheDocument();
   });
   it('should log error to console', () => {
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     const ThrowingComponent = () => {
       throw new Error('Logging test');
