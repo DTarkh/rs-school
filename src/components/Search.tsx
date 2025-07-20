@@ -1,50 +1,39 @@
-import { Component } from 'react';
-import type { FormEvent, ChangeEvent } from 'react';
+import { type FormEvent, type ChangeEvent, useState, useEffect } from 'react';
 import Button from './Button';
 
-type SubmitProp = {
+export default function Search({
+  onSubmit,
+}: {
   onSubmit: (value: string) => void;
-};
+}) {
+  const [inputValue, setInputValue] = useState('');
 
-type State = {
-  inputValue: string;
-};
-
-class Search extends Component<SubmitProp, State> {
-  constructor(props: SubmitProp) {
-    super(props);
+  useEffect(() => {
     const searchTermInLs = JSON.parse(
       localStorage.getItem('searchTerm') || '""'
     );
-    this.state = { inputValue: searchTermInLs };
-  }
+    setInputValue(searchTermInLs);
+  }, []);
 
-  submitHandler(e: FormEvent<HTMLFormElement>) {
+  function submitHandler(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    this.props.onSubmit(this.state.inputValue);
+    onSubmit(inputValue);
   }
 
-  inputHandler(e: ChangeEvent<HTMLInputElement>) {
-    this.setState({ inputValue: e.target.value });
+  function inputHandler(e: ChangeEvent<HTMLInputElement>) {
+    setInputValue(e.target.value);
   }
 
-  render() {
-    return (
-      <form
-        className="flex justify-center items-center"
-        onSubmit={this.submitHandler.bind(this)}
-      >
-        <input
-          data-testid="search-input"
-          onChange={this.inputHandler.bind(this)}
-          value={this.state.inputValue}
-          type="text"
-          className="border rounded-md outline-zinc-700 text-zinc-800 px-[10px] py-[3px] w-full"
-        />
-        <Button data-testid="search-button">Search</Button>
-      </form>
-    );
-  }
+  return (
+    <form className="flex justify-center items-center" onSubmit={submitHandler}>
+      <input
+        data-testid="search-input"
+        onChange={inputHandler}
+        value={inputValue}
+        type="text"
+        className="border rounded-md outline-zinc-700 text-zinc-800 px-[10px] py-[3px] w-full"
+      />
+      <Button data-testid="search-button">Search</Button>
+    </form>
+  );
 }
-
-export default Search;
