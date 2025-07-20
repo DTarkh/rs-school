@@ -3,6 +3,11 @@ import { render, screen, cleanup } from '@testing-library/react';
 import App from './App';
 import '@testing-library/jest-dom/vitest';
 import userEvent from '@testing-library/user-event';
+import {
+  mockFetchSuccess,
+  mockFetchFailure,
+  setSearchTerm,
+} from '../test-utils/test-utils';
 
 describe('Main app component', () => {
   beforeEach(() => {
@@ -12,17 +17,8 @@ describe('Main app component', () => {
     cleanup();
   });
   it('should make initial API call on component mount', () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() =>
-        Promise.resolve({
-          ok: true,
-          json: () => Promise.resolve({ products: [] }),
-        })
-      )
-    );
-
-    localStorage.setItem('searchTerm', JSON.stringify('initial'));
+    mockFetchSuccess({ products: [] });
+    setSearchTerm('initial');
 
     render(<App />);
 
@@ -31,17 +27,9 @@ describe('Main app component', () => {
     );
   });
   it('should handle search term from localStorage on initial load', async () => {
-    localStorage.setItem('searchTerm', JSON.stringify('saved'));
+    setSearchTerm('saved');
 
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() =>
-        Promise.resolve({
-          ok: true,
-          json: () => Promise.resolve({ products: [] }),
-        })
-      )
-    );
+    mockFetchSuccess({ products: [] });
 
     render(<App />);
 
@@ -66,8 +54,7 @@ describe('Main app component', () => {
       'fetch',
       vi.fn(() => fetchPromise)
     );
-
-    localStorage.setItem('searchTerm', JSON.stringify('loadingtest'));
+    setSearchTerm('loadingtest');
 
     render(<App />);
 
@@ -76,15 +63,7 @@ describe('Main app component', () => {
     expect(await screen.findByText(/no results/i)).toBeInTheDocument();
   });
   it('should call API with correct parameters', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() =>
-        Promise.resolve({
-          ok: true,
-          json: () => Promise.resolve({ products: [] }),
-        })
-      )
-    );
+    mockFetchSuccess({ products: [] });
 
     render(<App />);
 
@@ -99,40 +78,22 @@ describe('Main app component', () => {
     );
   });
   it('should handle successful API responses', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() =>
-        Promise.resolve({
-          ok: true,
-          json: () =>
-            Promise.resolve({
-              products: [
-                { id: 1, title: 'React Book', description: 'Learn React fast' },
-              ],
-            }),
-        })
-      )
-    );
+    mockFetchSuccess({
+      products: [
+        { id: 1, title: 'React Book', description: 'Learn React fast' },
+      ],
+    });
 
-    localStorage.setItem('searchTerm', JSON.stringify('react'));
+    setSearchTerm('react');
 
     render(<App />);
 
     expect(await screen.findByText(/react book/i)).toBeInTheDocument();
   });
   it('should handle API error responses', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() =>
-        Promise.resolve({
-          ok: false,
-          status: 500,
-          json: () => Promise.resolve({}),
-        })
-      )
-    );
+    mockFetchFailure();
 
-    localStorage.setItem('searchTerm', JSON.stringify(''));
+    setSearchTerm('');
 
     render(<App />);
 
@@ -145,23 +106,14 @@ describe('Main app component', () => {
     ).toBeInTheDocument();
   });
   it('should update component state based on API responses', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() =>
-        Promise.resolve({
-          ok: true,
-          json: () =>
-            Promise.resolve({
-              products: [
-                { id: 1, title: 'Book A', description: 'About A' },
-                { id: 2, title: 'Book B', description: 'About B' },
-              ],
-            }),
-        })
-      )
-    );
+    mockFetchSuccess({
+      products: [
+        { id: 1, title: 'Book A', description: 'About A' },
+        { id: 2, title: 'Book B', description: 'About B' },
+      ],
+    });
 
-    localStorage.setItem('searchTerm', JSON.stringify('books'));
+    setSearchTerm('books');
 
     render(<App />);
 

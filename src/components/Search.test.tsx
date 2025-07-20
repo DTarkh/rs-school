@@ -4,11 +4,12 @@ import '@testing-library/jest-dom/vitest';
 import Search from './Search';
 import App from '../App';
 import userEvent from '@testing-library/user-event';
+import { setSearchTerm } from '../../test-utils/test-utils';
 
 describe('Search component', () => {
   beforeEach(() => {
     localStorage.clear();
-    localStorage.setItem('searchTerm', JSON.stringify('react'));
+    setSearchTerm('react');
   });
 
   afterEach(() => {
@@ -83,14 +84,16 @@ describe('Search component', () => {
   });
 
   it('should retrieve saved search term on component mount', () => {
-    localStorage.setItem('searchTerm', JSON.stringify('ReactLib'));
+    setSearchTerm('ReactLib');
+
     render(<Search onSubmit={() => {}} />);
     const input = screen.getByTestId('search-input');
     expect(input).toHaveValue('ReactLib');
   });
 
   it('should overwrite existing localStorage value when new search is performed', async () => {
-    localStorage.setItem('searchTerm', JSON.stringify('OldValue'));
+    setSearchTerm('OldValue');
+
     render(<App />);
     const input = screen.getByTestId('search-input');
     const button = screen.getByTestId('search-button');

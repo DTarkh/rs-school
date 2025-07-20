@@ -12,6 +12,11 @@ import '@testing-library/jest-dom/vitest';
 import userEvent from '@testing-library/user-event';
 import ErrorBoundary from './ErrorBoundary';
 import App from '../App';
+import {
+  mockFetchFailure,
+  mockFetchSuccess,
+  setSearchTerm,
+} from '../../test-utils/test-utils';
 
 describe('Main app component', () => {
   afterEach(() => {
@@ -40,18 +45,9 @@ describe('Main app component', () => {
     expect(await screen.findByText(/test error/i)).toBeInTheDocument();
   });
   it('should display fallback UI when error occurs', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() =>
-        Promise.resolve({
-          ok: false,
-          status: 500,
-          json: () => Promise.resolve({}),
-        })
-      )
-    );
+    mockFetchFailure();
 
-    localStorage.setItem('searchTerm', JSON.stringify(''));
+    setSearchTerm('');
 
     render(<App />);
 
@@ -84,17 +80,9 @@ describe('Main app component', () => {
     consoleSpy.mockRestore();
   });
   it('should throw error when test button is clicked', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() =>
-        Promise.resolve({
-          ok: true,
-          json: () => Promise.resolve({ products: [] }),
-        })
-      )
-    );
+    mockFetchSuccess({ products: [] });
 
-    localStorage.setItem('searchTerm', JSON.stringify(''));
+    setSearchTerm('');
 
     render(<App />);
 
@@ -106,18 +94,8 @@ describe('Main app component', () => {
     ).toBeInTheDocument();
   });
   it('should trigger error boundary fallback UI', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() =>
-        Promise.resolve({
-          ok: false,
-          status: 404,
-          json: () => Promise.resolve({}),
-        })
-      )
-    );
-
-    localStorage.setItem('searchTerm', JSON.stringify(''));
+    mockFetchFailure(404);
+    setSearchTerm('');
 
     render(<App />);
 

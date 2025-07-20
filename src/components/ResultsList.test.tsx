@@ -4,6 +4,12 @@ import '@testing-library/jest-dom/vitest';
 import Results from './Results';
 import App from '../App';
 import ErrorBoundary from '../components/ErrorBoundary';
+import {
+  mockFetchSuccess,
+  mockFetchFailure,
+  setSearchTerm,
+} from '../../test-utils/test-utils';
+
 const setErrorMock = vi.fn();
 
 const sampleData = {
@@ -24,15 +30,7 @@ describe('Results List Component', () => {
   });
 
   it('should render correct number of items when data is provided', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() =>
-        Promise.resolve({
-          ok: true,
-          json: () => Promise.resolve(sampleData),
-        })
-      )
-    );
+    mockFetchSuccess(sampleData);
 
     render(
       <Results searchTerm="item" tirggerError={false} setError={setErrorMock} />
@@ -46,15 +44,7 @@ describe('Results List Component', () => {
   });
 
   it('should display "no results" message when data array is empty', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() =>
-        Promise.resolve({
-          ok: true,
-          json: () => Promise.resolve({ products: [] }),
-        })
-      )
-    );
+    mockFetchSuccess({ products: [] });
 
     render(
       <Results searchTerm="test" tirggerError={false} setError={setErrorMock} />
@@ -114,18 +104,9 @@ describe('Results List Component', () => {
   });
 
   it('should call setError on 500 response and show fallback message', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() =>
-        Promise.resolve({
-          ok: false,
-          status: 500,
-          json: () => Promise.resolve({}),
-        })
-      )
-    );
+    mockFetchFailure();
 
-    localStorage.setItem('searchTerm', JSON.stringify(''));
+    setSearchTerm('');
 
     render(<App />);
 
