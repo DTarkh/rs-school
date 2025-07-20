@@ -26,8 +26,9 @@ class App extends Component<Props, State> {
   }
 
   handleSubmit(value: string) {
-    localStorage.setItem('searchTerm', JSON.stringify(value));
-    this.setState({ searchTerm: value.trim().toLowerCase() });
+    const cleaned = value.trim().toLowerCase();
+    localStorage.setItem('searchTerm', JSON.stringify(cleaned));
+    this.setState({ searchTerm: cleaned });
   }
   onTriggerError() {
     this.setState({ tirggerError: true });
