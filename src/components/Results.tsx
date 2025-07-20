@@ -4,7 +4,7 @@ import ResultsList from './ResultsList';
 type Props = {
   searchTerm: string;
   tirggerError: boolean;
-  setError: (state: { tirggerError: boolean }) => void;
+  setError: (error: boolean) => void;
 };
 
 export type Item = {
@@ -43,7 +43,7 @@ class Results extends Component<Props, State> {
     fetch(url)
       .then((res) => {
         if (!res.ok) {
-          this.props.setError({ tirggerError: true });
+          this.props.setError(true);
           this.setState({
             errorMessage: `Failed to fetch data, status ${res.status}`,
           });
