@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 import ResultsList from './ResultsList';
 
 type Props = {
@@ -13,78 +13,58 @@ export type Item = {
   description: string;
 };
 
-type State = {
-  dataList: Item[];
-  isLoading: boolean;
-  errorMessage: string | null;
-};
+export default function Results({ searchTerm, tirggerError, setError }: Props) {
+  const [data, setData] = useState<Item[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<null | string>(null);
 
-class Results extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = { dataList: [], isLoading: false, errorMessage: null };
-  }
+  useEffect(() => {
+    function fetchData(searchTerm: string) {
+      const url = 'https://dummyjson.com/products/search?q=' + searchTerm;
 
-  componentDidMount() {
-    this.fetchData(this.props.searchTerm);
-  }
+      setIsLoading(true);
 
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.searchTerm !== this.props.searchTerm) {
-      this.fetchData(this.props.searchTerm);
+      fetch(url)
+        .then((res) => {
+          if (!res.ok) {
+            setError(true);
+            setErrorMessage(`Failed to fetch data, status ${res.status}`);
+            console.error('HTTP error:', res.status);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          setData(data.products);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          console.error('Fetch error:', err);
+          setIsLoading(false);
+        });
     }
+
+    fetchData(searchTerm);
+  }, [searchTerm, setError]);
+
+  if (tirggerError) {
+    throw new Error(errorMessage || 'An undexpected error occurred.');
   }
-
-  fetchData(searchTerm: string) {
-    const url = 'https://dummyjson.com/products/search?q=' + searchTerm;
-
-    this.setState({ isLoading: true });
-
-    fetch(url)
-      .then((res) => {
-        if (!res.ok) {
-          this.props.setError(true);
-          this.setState({
-            errorMessage: `Failed to fetch data, status ${res.status}`,
-          });
-          console.error('HTTP error:', res.status);
-        }
-        return res.json();
-      })
-      .then((data) =>
-        this.setState({ dataList: data.products, isLoading: false })
-      )
-      .catch((err) => {
-        console.error('Fetch error:', err);
-        this.setState({ isLoading: false });
-      });
-  }
-
-  render() {
-    if (this.props.tirggerError) {
-      throw new Error(
-        this.state.errorMessage || 'An undexpected error occurred.'
-      );
-    }
-    return (
-      <div className="border rounded-md h-[300px] overflow-auto">
-        {this.state.isLoading && <p>Loading...</p>}
-        {!this.state.isLoading && this.state.dataList.length === 0 && (
-          <p>No results found for &quot;{this.props.searchTerm}&quot;.</p>
-        )}
-        <ul>
-          {!this.state.isLoading &&
-            this.state.dataList.map((product) => (
-              <ResultsList
-                key={product.id}
-                title={product.title}
-                description={product.description}
-              />
-            ))}
-        </ul>
-      </div>
-    );
-  }
+  return (
+    <div className="border rounded-md h-[300px] overflow-auto">
+      {isLoading && <p>Loading...</p>}
+      {!isLoading && data.length === 0 && (
+        <p>No results found for &quot;{searchTerm}&quot;.</p>
+      )}
+      <ul>
+        {!isLoading &&
+          data.map((product) => (
+            <ResultsList
+              key={product.id}
+              title={product.title}
+              description={product.description}
+            />
+          ))}
+      </ul>
+    </div>
+  );
 }
-
-export default Results;
