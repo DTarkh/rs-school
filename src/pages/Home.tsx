@@ -28,7 +28,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="bg-amber-200 w-full h-screen flex items-center justify-center">
+    <>
       <Container>
         <div className="w-full">
           <h1 className="text-xl pb-[10px] text-center">Search</h1>
@@ -50,6 +50,6 @@ export default function HomePage() {
           <Button onClick={onTriggerError}>Trigger Error</Button>
         </div>
       </Container>
-    </main>
+    </>
   );
 }
