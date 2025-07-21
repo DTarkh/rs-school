@@ -1,4 +1,3 @@
-import Container from '../components/Container';
 import Button from '../components/Button';
 import Search from '../components/Search';
 import Results from '../components/Results';
@@ -29,27 +28,26 @@ export default function HomePage() {
 
   return (
     <>
-      <Container>
-        <div className="w-full">
-          <h1 className="text-xl pb-[10px] text-center">Search</h1>
-          <Search onSubmit={handleSubmit} />
-        </div>
-        <ErrorBoundary>
-          <div className="w-full">
-            <h1 className="text-xl pb-[10px] text-center">Results</h1>
-            {searchTerm !== null && (
-              <Results
-                searchTerm={searchTerm}
-                tirggerError={triggerError}
-                setError={setTriggerError}
-              />
-            )}
+      <div className="layout border p-4 rounded-xl border-gray-400 bg-white mt-[100px]">
+        <Search onSubmit={handleSubmit} />
+      </div>
+      <ErrorBoundary>
+        <div className="layout mt-[50px]">
+          <div className="flex justify-between items-center pb-3">
+            <h1 className="text-2xl pb-[10px] text-start font-semibold">
+              Results
+            </h1>
+            <Button onClick={onTriggerError}>Trigger Error</Button>
           </div>
-        </ErrorBoundary>
-        <div className="w-full flex justify-end">
-          <Button onClick={onTriggerError}>Trigger Error</Button>
+          {searchTerm !== null && (
+            <Results
+              searchTerm={searchTerm}
+              tirggerError={triggerError}
+              setError={setTriggerError}
+            />
+          )}
         </div>
-      </Container>
+      </ErrorBoundary>
     </>
   );
 }

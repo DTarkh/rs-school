@@ -11,6 +11,7 @@ export type Item = {
   id: number;
   title: string;
   description: string;
+  thumbnail: string;
 };
 
 export default function Results({ searchTerm, tirggerError, setError }: Props) {
@@ -50,21 +51,30 @@ export default function Results({ searchTerm, tirggerError, setError }: Props) {
     throw new Error(errorMessage || 'An undexpected error occurred.');
   }
   return (
-    <div className="border rounded-md h-[300px] overflow-auto">
-      {isLoading && <p>Loading...</p>}
-      {!isLoading && data.length === 0 && (
-        <p>No results found for &quot;{searchTerm}&quot;.</p>
+    <div className="border rounded-md  p-3 ">
+      {isLoading && (
+        <div
+          className="w-full h-[500px] flex items-center justify-center"
+          data-testid="loading"
+        >
+          <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
       )}
-      <ul>
+      {!isLoading && data.length === 0 && (
+        <div className="w-full h-[500px] flex items-center justify-center">
+          <p>No results found for &quot;{searchTerm}&quot;.</p>
+        </div>
+      )}
+      <div className="grid grid-cols-1 gap-4">
         {!isLoading &&
           data.map((product) => (
             <ResultsList
               key={product.id}
               title={product.title}
-              description={product.description}
+              image={product.thumbnail}
             />
           ))}
-      </ul>
+      </div>
     </div>
   );
 }
