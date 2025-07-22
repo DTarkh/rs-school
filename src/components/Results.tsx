@@ -26,6 +26,17 @@ export default function Results({ searchTerm, tirggerError, setError }: Props) {
   const skip = (currentPage - 1) * limit;
 
   useEffect(() => {
+    function updatePageParam(page: number) {
+      const params = new URLSearchParams(window.location.search);
+      params.set('page', String(page));
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.pushState({}, '', newUrl);
+    }
+
+    updatePageParam(currentPage);
+  });
+
+  useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm]);
 
@@ -82,6 +93,7 @@ export default function Results({ searchTerm, tirggerError, setError }: Props) {
             data.map((product) => (
               <ResultsList
                 key={product.id}
+                id={product.id}
                 title={product.title}
                 image={product.thumbnail}
               />
