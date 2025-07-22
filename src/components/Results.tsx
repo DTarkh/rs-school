@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import ResultsList from './ResultsList';
 import Pagination from './Pagination';
+import useFetchProducts from '../hooks/useFetchProducts';
 
 type Props = {
   searchTerm: string;
@@ -16,14 +17,16 @@ export type Item = {
 };
 
 export default function Results({ searchTerm, tirggerError, setError }: Props) {
-  const [data, setData] = useState<Item[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<null | string>(null);
-
   const [currentPage, setCurrentPage] = useState(1);
-  const [total, setTotal] = useState(0);
   const limit = 5;
   const skip = (currentPage - 1) * limit;
+
+  const { data, isLoading, errorMessage, total } = useFetchProducts({
+    searchTerm,
+    setError,
+    skip,
+    limit,
+  });
 
   useEffect(() => {
     function updatePageParam(page: number) {
@@ -39,35 +42,6 @@ export default function Results({ searchTerm, tirggerError, setError }: Props) {
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm]);
-
-  useEffect(() => {
-    function fetchData(searchTerm: string) {
-      const url = `https://dummyjson.com/products/search?q=${searchTerm}&limit=${limit}&skip=${skip}`;
-
-      setIsLoading(true);
-
-      fetch(url)
-        .then((res) => {
-          if (!res.ok) {
-            setError(true);
-            setErrorMessage(`Failed to fetch data, status ${res.status}`);
-            console.error('HTTP error:', res.status);
-          }
-          return res.json();
-        })
-        .then((data) => {
-          setData(data.products);
-          setTotal(data.total);
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          console.error('Fetch error:', err);
-          setIsLoading(false);
-        });
-    }
-
-    fetchData(searchTerm);
-  }, [searchTerm, setError, skip]);
 
   if (tirggerError) {
     throw new Error(errorMessage || 'An undexpected error occurred.');
