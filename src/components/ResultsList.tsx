@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 
 export default function ResultsList({
+  id,
   title,
   image,
 }: {
+  id: number;
   title: string;
   image: string;
 }) {
@@ -17,7 +19,7 @@ export default function ResultsList({
       <div className="flex flex-col gap-3">
         <h3 className="font-medium text-gray-900">{title}</h3>
         <Link
-          to={`/products/`}
+          to={`/product/${id}`}
           className="hover:text-fuchsia-600 transition-all"
         >
           See Details{' '}
