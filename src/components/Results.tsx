@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import ResultsList from './ResultsList';
+import Pagination from './Pagination';
 
 type Props = {
   searchTerm: string;
@@ -19,9 +20,18 @@ export default function Results({ searchTerm, tirggerError, setError }: Props) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<null | string>(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const limit = 5;
+  const skip = (currentPage - 1) * limit;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
   useEffect(() => {
     function fetchData(searchTerm: string) {
-      const url = 'https://dummyjson.com/products/search?q=' + searchTerm;
+      const url = `https://dummyjson.com/products/search?q=${searchTerm}&limit=${limit}&skip=${skip}`;
 
       setIsLoading(true);
 
@@ -36,6 +46,7 @@ export default function Results({ searchTerm, tirggerError, setError }: Props) {
         })
         .then((data) => {
           setData(data.products);
+          setTotal(data.total);
           setIsLoading(false);
         })
         .catch((err) => {
@@ -45,36 +56,48 @@ export default function Results({ searchTerm, tirggerError, setError }: Props) {
     }
 
     fetchData(searchTerm);
-  }, [searchTerm, setError]);
+  }, [searchTerm, setError, skip]);
 
   if (tirggerError) {
     throw new Error(errorMessage || 'An undexpected error occurred.');
   }
   return (
-    <div className="border rounded-md  p-3 ">
-      {isLoading && (
-        <div
-          className="w-full h-[500px] flex items-center justify-center"
-          data-testid="loading"
-        >
-          <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+    <>
+      <div className="border rounded-md  p-3 h-[600px]">
+        {isLoading && (
+          <div
+            className="w-full  flex justify-center items-center h-full"
+            data-testid="loading"
+          >
+            <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )}
+        {!isLoading && data.length === 0 && (
+          <div className="w-full  flex items-center justify-center h-full">
+            <p>No results found for &quot;{searchTerm}&quot;.</p>
+          </div>
+        )}
+        <div className="grid grid-cols-1 gap-4  overflow-y-auto">
+          {!isLoading &&
+            data.map((product) => (
+              <ResultsList
+                key={product.id}
+                title={product.title}
+                image={product.thumbnail}
+              />
+            ))}
         </div>
-      )}
-      {!isLoading && data.length === 0 && (
-        <div className="w-full h-[500px] flex items-center justify-center">
-          <p>No results found for &quot;{searchTerm}&quot;.</p>
-        </div>
-      )}
-      <div className="grid grid-cols-1 gap-4">
-        {!isLoading &&
-          data.map((product) => (
-            <ResultsList
-              key={product.id}
-              title={product.title}
-              image={product.thumbnail}
-            />
-          ))}
       </div>
-    </div>
+      <div className="h-[35px] mt-[25px]">
+        {!isLoading && data.length !== 0 && (
+          <Pagination
+            page={currentPage}
+            setPage={setCurrentPage}
+            total={total}
+            limit={limit}
+          />
+        )}
+      </div>
+    </>
   );
 }
