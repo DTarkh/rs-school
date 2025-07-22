@@ -28,11 +28,11 @@ export default function HomePage() {
 
   return (
     <>
-      <div className="layout border p-4 rounded-xl border-gray-400 bg-white mt-[100px]">
+      <div className="layout border p-4 rounded-xl border-gray-400 bg-white mt-[75px]">
         <Search onSubmit={handleSubmit} />
       </div>
       <ErrorBoundary>
-        <div className="layout mt-[50px]">
+        <div className="layout mt-[20px]">
           <div className="flex justify-between items-center pb-3">
             <h1 className="text-2xl pb-[10px] text-start font-semibold">
               Results

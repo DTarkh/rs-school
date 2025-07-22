@@ -8,29 +8,21 @@ export default function ResultsList({
   image: string;
 }) {
   return (
-    <Link
-      to={`/products/`}
-      className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow p-4 group"
-    >
-      <div className="flex items-start space-x-4">
-        <img
-          src={image}
-          alt={title}
-          className="w-16 h-16 object-cover rounded-md flex-shrink-0"
-        />
-        <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-medium text-gray-900 group-hover:text-blue-600 line-clamp-2">
-            Title: {title.slice(0, 20)}
-          </h3>
-          <p className="text-sm text-gray-500 mt-1 capitalize">Catregory</p>
-          <div className="flex items-center mt-2 space-x-4">
-            <span className="text-lg font-bold text-gray-900">$Price</span>
-            <div className="flex items-center text-sm text-gray-500">
-              Rating / Count
-            </div>
-          </div>
-        </div>
+    <div className="flex items-center space-x-4 bg-white rounded-lg shadow-sm border hover:bg-gray-100  p-4">
+      <img
+        src={image}
+        alt={title}
+        className="w-16 h-16 object-cover rounded-md flex-shrink-0"
+      />
+      <div className="flex flex-col gap-3">
+        <h3 className="font-medium text-gray-900">{title}</h3>
+        <Link
+          to={`/products/`}
+          className="hover:text-fuchsia-600 transition-all"
+        >
+          See Details{' '}
+        </Link>
       </div>
-    </Link>
+    </div>
   );
 }
