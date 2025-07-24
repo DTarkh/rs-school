@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
+import { MemoryRouter } from 'react-router-dom';
 import Results from './Results';
 import App from '../App';
 import ErrorBoundary from './ErrorBoundary';
@@ -34,10 +35,16 @@ describe('Results List Component', () => {
     mockFetchSuccess(sampleData);
 
     render(
-      <Results searchTerm="item" tirggerError={false} setError={setErrorMock} />
+      <MemoryRouter>
+        <Results
+          searchTerm="item"
+          tirggerError={false}
+          setError={setErrorMock}
+        />
+      </MemoryRouter>
     );
 
-    const titles = await screen.findAllByText(/item/i);
+    const titles = await screen.findAllByTestId('item-title');
 
     expect(titles.length).toBe(3);
   });

@@ -17,7 +17,9 @@ export default function ResultsItem({
         className="w-16 h-16 object-cover rounded-md flex-shrink-0"
       />
       <div className="flex flex-col gap-3">
-        <h3 className="font-medium text-gray-900">{title}</h3>
+        <h3 className="font-medium text-gray-900" data-testid="item-title">
+          {title}
+        </h3>
         <Link
           to={`/product/${id}`}
           className="hover:text-fuchsia-600 transition-all"
