@@ -2,30 +2,20 @@ import Button from '../components/Button';
 import Search from '../components/Search';
 import Results from '../components/Results';
 import ErrorBoundary from '../components/ErrorBoundary';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-
-export type Props = Record<string, never>;
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 export default function HomePage() {
-  const [searchTerm, setSearchTerm] = useState<null | string>(null);
   const [triggerError, setTriggerError] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useLocalStorage('searchTerm', '');
 
   const location = useLocation();
 
   const isInSplitView = location.pathname.includes('/product/');
 
-  useEffect(() => {
-    const searchTerm = localStorage.getItem('searchTerm');
-    if (searchTerm) {
-      setSearchTerm(JSON.parse(searchTerm));
-    }
-  }, []);
-
   function handleSubmit(value: string) {
-    const cleaned = value.trim().toLowerCase();
-    localStorage.setItem('searchTerm', JSON.stringify(cleaned));
-    setSearchTerm(cleaned);
+    setSearchTerm(value);
   }
   function onTriggerError() {
     setTriggerError(true);
@@ -65,13 +55,11 @@ export default function HomePage() {
             </div>
           ) : (
             <div>
-              {searchTerm !== null && (
-                <Results
-                  searchTerm={searchTerm}
-                  tirggerError={triggerError}
-                  setError={setTriggerError}
-                />
-              )}
+              <Results
+                searchTerm={searchTerm}
+                tirggerError={triggerError}
+                setError={setTriggerError}
+              />
             </div>
           )}
         </div>

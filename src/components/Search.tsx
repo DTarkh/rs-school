@@ -1,19 +1,13 @@
-import { type FormEvent, type ChangeEvent, useState, useEffect } from 'react';
+import { type FormEvent, type ChangeEvent } from 'react';
 import Button from './Button';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 export default function Search({
   onSubmit,
 }: {
   onSubmit: (value: string) => void;
 }) {
-  const [inputValue, setInputValue] = useState('');
-
-  useEffect(() => {
-    const searchTermInLs = JSON.parse(
-      localStorage.getItem('searchTerm') || '""'
-    );
-    setInputValue(searchTermInLs);
-  }, []);
+  const [inputValue, setInputValue] = useLocalStorage<string>('searchTerm', '');
 
   function submitHandler(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
