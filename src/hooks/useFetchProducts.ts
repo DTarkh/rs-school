@@ -26,32 +26,34 @@ export default function useFetchProducts({
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    function fetchData(searchTerm: string) {
+    async function fetchData() {
       const url = `https://dummyjson.com/products/search?q=${searchTerm}&limit=${limit}&skip=${skip}`;
-
       setIsLoading(true);
 
-      fetch(url)
-        .then((res) => {
-          if (!res.ok) {
-            setError(true);
-            setErrorMessage(`Failed to fetch data, status ${res.status}`);
-            console.error('HTTP error:', res.status);
-          }
-          return res.json();
-        })
-        .then((data) => {
-          setData(data.products);
-          setTotal(data.total);
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          console.error('Fetch error:', err);
-          setIsLoading(false);
-        });
+      try {
+        const res = await fetch(url);
+
+        if (!res.ok) {
+          setError(true);
+          setErrorMessage(`Something went wrong (status ${res.status})`);
+          return;
+        }
+
+        const json = await res.json();
+
+        setData(json.products);
+        setTotal(json.total);
+        setError(false);
+        setErrorMessage(null);
+      } catch (err) {
+        console.error('Fetch error:', err);
+        setError(true);
+        setErrorMessage('Network error. Please check your connection.');
+      }
+      setIsLoading(false);
     }
 
-    fetchData(searchTerm);
+    fetchData();
   }, [searchTerm, setError, skip, limit]);
 
   return { data, isLoading, errorMessage, total };
