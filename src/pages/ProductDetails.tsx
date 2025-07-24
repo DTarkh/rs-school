@@ -2,6 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { useEffect, useState } from 'react';
 import Spinner from '../components/Spinner';
+import Button from '../components/Button';
 
 type Item = {
   id: number;
@@ -55,12 +56,7 @@ export default function ProductDetails() {
       {isLoading && <Spinner />}
       {!isLoading && data && (
         <>
-          <button
-            onClick={() => navigate('/')}
-            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Back to Products
-          </button>
+          <Button onClick={() => navigate('/')}>Back to Products</Button>
           <div className="aspect-square w-full max-w-md mx-auto mb-6 bg-gray-100 rounded-lg overflow-hidden">
             <img
               src={data.thumbnail}

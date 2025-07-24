@@ -12,9 +12,14 @@ export default function AboutPage() {
                 Hey, I&apos;m David. -{' '}
                 <span className="text-zinc-800">A React Developer</span>
               </h3>
-              <h2 className="text-zinc-700 font-semibold text-2xl">
-                My github: Dtarkh{' '}
-              </h2>
+              <a
+                href="https://github.com/DTarkh"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-purple-700 transition-all text-zinc-700 font-semibold text-2xl"
+              >
+                My github: Dtarkh
+              </a>
             </div>
           </div>
         </div>

@@ -58,7 +58,7 @@ export default function HomePage() {
               </div>
 
               <div className="w-1/2 pl-3">
-                <div className="bg-white rounded-lg shadow-sm border h-full">
+                <div className="bg-[#F3F4F6] rounded-lg shadow-sm border h-full">
                   <Outlet />
                 </div>
               </div>
