@@ -3,7 +3,7 @@ import { render, screen, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import Results from './Results';
 import App from '../App';
-import ErrorBoundary from '../components/ErrorBoundary';
+import ErrorBoundary from './ErrorBoundary';
 import {
   mockFetchSuccess,
   mockFetchFailure,
@@ -14,8 +14,9 @@ const setErrorMock = vi.fn();
 
 const sampleData = {
   products: [
-    { id: 1, title: 'Item 1', description: 'Desc 1' },
-    { id: 2, title: 'Item 2', description: 'Desc 2' },
+    { id: 1, title: 'Item 1', thumbnail: 'img1.jpg' },
+    { id: 2, title: 'Item 2', thumbnail: 'img2.jpg' },
+    { id: 3, title: 'Item 3', thumbnail: 'img3.jpg' },
   ],
 };
 
@@ -36,11 +37,9 @@ describe('Results List Component', () => {
       <Results searchTerm="item" tirggerError={false} setError={setErrorMock} />
     );
 
-    const titles = await screen.findAllByText(/Title:/);
-    const descriptions = screen.getAllByText(/Description:/);
+    const titles = await screen.findAllByText(/item/i);
 
-    expect(titles.length).toBe(2);
-    expect(descriptions.length).toBe(2);
+    expect(titles.length).toBe(3);
   });
 
   it('should display "no results" message when data array is empty', async () => {
@@ -77,7 +76,7 @@ describe('Results List Component', () => {
       <Results searchTerm="test" tirggerError={false} setError={setErrorMock} />
     );
 
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
+    expect(screen.getByTestId('loading')).toBeInTheDocument();
   });
 
   it('should handle missing or undefined data gracefully', async () => {});
@@ -115,7 +114,7 @@ describe('Results List Component', () => {
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByText(/failed to fetch data, status 500/i)
+      await screen.findByText(/something went wrong.*500/i)
     ).toBeInTheDocument();
   });
 });

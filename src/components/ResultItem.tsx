@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-export default function ResultsList({
+export default function ResultsItem({
   id,
   title,
   image,

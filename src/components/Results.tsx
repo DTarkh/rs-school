@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import ResultsList from './ResultsList';
+import ResultItem from './ResultItem';
 import Pagination from './Pagination';
 import useFetchProducts from '../hooks/useFetchProducts';
 
@@ -65,7 +65,7 @@ export default function Results({ searchTerm, tirggerError, setError }: Props) {
         <div className="grid grid-cols-1 gap-4  overflow-y-auto">
           {!isLoading &&
             data.map((product) => (
-              <ResultsList
+              <ResultItem
                 key={product.id}
                 id={product.id}
                 title={product.title}
