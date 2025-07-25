@@ -23,7 +23,7 @@ describe('Main app component', () => {
     render(<App />);
 
     expect(fetch).toHaveBeenCalledWith(
-      'https://dummyjson.com/products/search?q=initial'
+      'https://dummyjson.com/products/search?q=initial&limit=5&skip=0'
     );
   });
   it('should handle search term from localStorage on initial load', async () => {
@@ -58,7 +58,7 @@ describe('Main app component', () => {
 
     render(<App />);
 
-    expect(screen.getByText(/loading/i)).toBeInTheDocument();
+    expect(screen.getByTestId(/loading/i)).toBeInTheDocument();
 
     expect(await screen.findByText(/no results/i)).toBeInTheDocument();
   });
@@ -74,7 +74,7 @@ describe('Main app component', () => {
     await userEvent.click(button);
 
     expect(fetch).toHaveBeenCalledWith(
-      'https://dummyjson.com/products/search?q=react'
+      'https://dummyjson.com/products/search?q=react&limit=5&skip=0'
     );
   });
   it('should handle successful API responses', async () => {
@@ -98,7 +98,7 @@ describe('Main app component', () => {
     render(<App />);
 
     expect(
-      await screen.findByText(/failed to fetch data, status 500/i)
+      await screen.findByText(/something went wrong.*500/i)
     ).toBeInTheDocument();
 
     expect(

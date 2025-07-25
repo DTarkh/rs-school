@@ -80,7 +80,7 @@ describe('Search component', () => {
     await userEvent.type(input, 'ReAct ');
     await userEvent.click(button);
 
-    expect(mockSubmit).toHaveBeenCalledWith('ReAct ');
+    expect(mockSubmit).toHaveBeenCalledWith('react');
   });
 
   it('should retrieve saved search term on component mount', () => {

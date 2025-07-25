@@ -1,50 +1,33 @@
-import { Component } from 'react';
-import type { FormEvent, ChangeEvent } from 'react';
+import { type FormEvent, type ChangeEvent } from 'react';
 import Button from './Button';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
-type SubmitProp = {
+export default function Search({
+  onSubmit,
+}: {
   onSubmit: (value: string) => void;
-};
+}) {
+  const [inputValue, setInputValue] = useLocalStorage<string>('searchTerm', '');
 
-type State = {
-  inputValue: string;
-};
-
-class Search extends Component<SubmitProp, State> {
-  constructor(props: SubmitProp) {
-    super(props);
-    const searchTermInLs = JSON.parse(
-      localStorage.getItem('searchTerm') || '""'
-    );
-    this.state = { inputValue: searchTermInLs };
-  }
-
-  submitHandler(e: FormEvent<HTMLFormElement>) {
+  function submitHandler(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    this.props.onSubmit(this.state.inputValue);
+    onSubmit(inputValue);
   }
 
-  inputHandler(e: ChangeEvent<HTMLInputElement>) {
-    this.setState({ inputValue: e.target.value });
+  function inputHandler(e: ChangeEvent<HTMLInputElement>) {
+    setInputValue(e.target.value);
   }
 
-  render() {
-    return (
-      <form
-        className="flex justify-center items-center"
-        onSubmit={this.submitHandler.bind(this)}
-      >
-        <input
-          data-testid="search-input"
-          onChange={this.inputHandler.bind(this)}
-          value={this.state.inputValue}
-          type="text"
-          className="border rounded-md outline-zinc-700 text-zinc-800 px-[10px] py-[3px] w-full"
-        />
-        <Button data-testid="search-button">Search</Button>
-      </form>
-    );
-  }
+  return (
+    <form className="flex justify-center items-center" onSubmit={submitHandler}>
+      <input
+        data-testid="search-input"
+        onChange={inputHandler}
+        value={inputValue}
+        type="text"
+        className="border rounded-xl outline-fuchsia-600 text-zinc-800 px-[10px] py-[7px] w-full border-gray-400"
+      />
+      <Button data-testid="search-button">Search</Button>
+    </form>
+  );
 }
-
-export default Search;

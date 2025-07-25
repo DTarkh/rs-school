@@ -56,7 +56,7 @@ describe('Main app component', () => {
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByText(/failed to fetch data, status 500/i)
+      await screen.findByText(/something went wrong.*500/i)
     ).toBeInTheDocument();
   });
   it('should log error to console', () => {
@@ -100,7 +100,7 @@ describe('Main app component', () => {
     render(<App />);
 
     expect(
-      await screen.findByText(/failed to fetch data, status 404/i)
+      await screen.findByText(/something went wrong.*404/i)
     ).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /error/i })).toBeInTheDocument();
   });

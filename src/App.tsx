@@ -1,67 +1,26 @@
-import { Component } from 'react';
-import Container from './components/Container';
-import Button from './components/Button';
-import Search from './components/Search';
-import Results from './components/Results';
-import ErrorBoundary from './components/ErrorBoundary';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import HomePage from './pages/Home';
+import RootLayout from './pages/Root';
+import AboutPage from './pages/About';
+import ProductDetails from './pages/ProductDetails';
+import ErrorPage from './pages/Error';
 
-export type Props = Record<string, never>;
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <RootLayout />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: '/',
+        element: <HomePage />,
+        children: [{ path: 'product/:id', element: <ProductDetails /> }],
+      },
+      { path: '/about', element: <AboutPage /> },
+    ],
+  },
+]);
 
-type State = {
-  searchTerm: null | string;
-  tirggerError: boolean;
-};
-
-class App extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = { searchTerm: null, tirggerError: false };
-  }
-
-  componentDidMount() {
-    const searchTerm = localStorage.getItem('searchTerm');
-    if (searchTerm) {
-      this.setState({ searchTerm: JSON.parse(searchTerm) });
-    }
-  }
-
-  handleSubmit(value: string) {
-    const cleaned = value.trim().toLowerCase();
-    localStorage.setItem('searchTerm', JSON.stringify(cleaned));
-    this.setState({ searchTerm: cleaned });
-  }
-  onTriggerError() {
-    this.setState({ tirggerError: true });
-  }
-  render() {
-    return (
-      <main className="bg-amber-200 w-full h-screen flex items-center justify-center">
-        <Container>
-          <div className="w-full">
-            <h1 className="text-xl pb-[10px] text-center">Search</h1>
-            <Search onSubmit={this.handleSubmit.bind(this)} />
-          </div>
-          <ErrorBoundary>
-            <div className="w-full">
-              <h1 className="text-xl pb-[10px] text-center">Results</h1>
-              {this.state.searchTerm !== null && (
-                <Results
-                  searchTerm={this.state.searchTerm}
-                  tirggerError={this.state.tirggerError}
-                  setError={this.setState.bind(this)}
-                />
-              )}
-            </div>
-          </ErrorBoundary>
-          <div className="w-full flex justify-end">
-            <Button onClick={this.onTriggerError.bind(this)}>
-              Trigger Error
-            </Button>
-          </div>
-        </Container>
-      </main>
-    );
-  }
+export default function App() {
+  return <RouterProvider router={router} />;
 }
-
-export default App;
