@@ -20,6 +20,8 @@ export default function ProductDetails() {
 
   useEffect(() => {
     async function fetchSingleProduct() {
+      setError('');
+      setData(null);
       setIsLoading(true);
 
       try {
@@ -48,12 +50,29 @@ export default function ProductDetails() {
 
   const navigate = useNavigate();
 
-  if (!data && !isLoading) return <div>Error, Could not fetch data!</div>;
+  if (error) {
+    return (
+      <div className="h-full w-full flex justify-center items-center">
+        {error}
+      </div>
+    );
+  }
+
+  if (!data && !isLoading) {
+    return (
+      <div className="h-full w-full flex justify-center items-center">
+        Error, Could not fetch data!
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6">
-      {error && <p>{error}</p>}
-      {isLoading && <Spinner />}
+    <div className="p-6 h-full">
+      {isLoading && (
+        <div className="h-full w-full flex justify-center items-center">
+          <Spinner />
+        </div>
+      )}
       {!isLoading && data && (
         <>
           <Button onClick={() => navigate('/')}>Back to Products</Button>
