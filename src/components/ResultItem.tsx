@@ -7,7 +7,7 @@ type ItemProps = {
   id: number;
   title: string;
   image: string;
-  quantity: number;
+  quantity?: number;
 };
 
 export default function ResultsItem({ id, title, image }: ItemProps) {
