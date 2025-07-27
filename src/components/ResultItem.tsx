@@ -3,7 +3,7 @@ import { itemsActions } from '../store/items';
 import { Link } from 'react-router-dom';
 import type { ItemsState } from '../store/items';
 
-type ItemProps = {
+export type ItemProps = {
   id: number;
   title: string;
   image: string;
