@@ -40,6 +40,7 @@ const itemsSlice = createSlice({
     },
     removeAllItems(state) {
       state.items = [];
+      state.totalQuantity = 0;
     },
   },
 });
