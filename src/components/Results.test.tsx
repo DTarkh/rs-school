@@ -10,6 +10,8 @@ import {
   mockFetchFailure,
   setSearchTerm,
 } from '../../test-utils/test-utils';
+import { Provider } from 'react-redux';
+import { store } from '../store';
 
 const setErrorMock = vi.fn();
 
@@ -36,11 +38,13 @@ describe('Results List Component', () => {
 
     render(
       <MemoryRouter>
-        <Results
-          searchTerm="item"
-          tirggerError={false}
-          setError={setErrorMock}
-        />
+        <Provider store={store}>
+          <Results
+            searchTerm="item"
+            tirggerError={false}
+            setError={setErrorMock}
+          />
+        </Provider>
       </MemoryRouter>
     );
 

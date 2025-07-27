@@ -8,6 +8,8 @@ import {
   mockFetchFailure,
   setSearchTerm,
 } from '../test-utils/test-utils';
+import { Provider } from 'react-redux';
+import { store } from '../src/store/index';
 
 describe('Main app component', () => {
   beforeEach(() => {
@@ -84,9 +86,13 @@ describe('Main app component', () => {
       ],
     });
 
-    setSearchTerm('react');
+    setSearchTerm('react book');
 
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
 
     expect(await screen.findByText(/react book/i)).toBeInTheDocument();
   });
@@ -115,7 +121,11 @@ describe('Main app component', () => {
 
     setSearchTerm('books');
 
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
 
     expect(await screen.findByText(/book a/i)).toBeInTheDocument();
     expect(screen.getByText(/book b/i)).toBeInTheDocument();
