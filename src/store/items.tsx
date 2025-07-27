@@ -16,7 +16,7 @@ export type ItemsState = {
 
 const initialState: ItemsState = {
   items: initialItems,
-  totalQuantity: 0,
+  totalQuantity: initialItems.length,
 };
 
 const itemsSlice = createSlice({
