@@ -38,6 +38,9 @@ const itemsSlice = createSlice({
       state.items = state.items.filter((item) => item.id !== id);
       state.totalQuantity--;
     },
+    removeAllItems(state) {
+      state.items = [];
+    },
   },
 });
 
