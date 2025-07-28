@@ -12,6 +12,7 @@ import {
 } from '../../test-utils/test-utils';
 import { Provider } from 'react-redux';
 import { store } from '../store';
+import { ThemeProvider } from '../contexts/useTheme';
 
 const setErrorMock = vi.fn();
 
@@ -118,7 +119,13 @@ describe('Results List Component', () => {
 
     setSearchTerm('');
 
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    );
 
     expect(
       await screen.findByRole('heading', { name: /error/i })

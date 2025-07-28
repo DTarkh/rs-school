@@ -5,6 +5,9 @@ import Search from './Search';
 import App from '../App';
 import userEvent from '@testing-library/user-event';
 import { setSearchTerm } from '../../test-utils/test-utils';
+import { Provider } from 'react-redux';
+import { store } from '../store';
+import { ThemeProvider } from '../contexts/useTheme';
 
 describe('Search component', () => {
   beforeEach(() => {
@@ -23,14 +26,26 @@ describe('Search component', () => {
   });
 
   it('should display previously saved search term from localStorage on mount', () => {
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    );
     const input = screen.getByTestId('search-input');
     expect(input).toHaveValue('react');
   });
 
   it('should show empty input when no saved term exists', () => {
     localStorage.clear();
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    );
     const input = screen.getByTestId('search-input');
     expect(input).toHaveValue('');
   });
@@ -44,7 +59,13 @@ describe('Search component', () => {
   });
 
   it('should save search term to localStorage when search button is clicked', async () => {
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    );
     const input = screen.getByTestId('search-input');
     const button = screen.getByTestId('search-button');
 
@@ -57,7 +78,13 @@ describe('Search component', () => {
   });
 
   it('should trim whitespace from search input before saving', async () => {
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    );
     const input = screen.getByTestId('search-input');
     const button = screen.getByTestId('search-button');
 
@@ -94,7 +121,13 @@ describe('Search component', () => {
   it('should overwrite existing localStorage value when new search is performed', async () => {
     setSearchTerm('OldValue');
 
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    );
     const input = screen.getByTestId('search-input');
     const button = screen.getByTestId('search-button');
 
