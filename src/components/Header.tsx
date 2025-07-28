@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom';
+import Themeswitch from './ThemeSwitch';
 
 export default function Header() {
   return (
     <header className="bg-white/80 backdrop-blur-md shadow-lg border-b border-gray-100 z-50 w-full fixed top-0 flex justify-center items-center h-[60px]">
-      <nav>
-        <ul className="flex items-center justify-center gap-8 py-4">
+      <nav className="layout w-full flex justify-between items-center">
+        <ul className="flex items-center justify-center gap-2 py-4">
           <li>
             <NavLink
               to="/"
@@ -28,6 +29,7 @@ export default function Header() {
             </NavLink>
           </li>
         </ul>
+        <Themeswitch />
       </nav>
     </header>
   );
