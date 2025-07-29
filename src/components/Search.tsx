@@ -11,7 +11,7 @@ export default function Search({
 
   function submitHandler(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    onSubmit(inputValue);
+    onSubmit(inputValue.trim().toLowerCase());
   }
 
   function inputHandler(e: ChangeEvent<HTMLInputElement>) {

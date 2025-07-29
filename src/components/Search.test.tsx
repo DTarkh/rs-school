@@ -77,23 +77,19 @@ describe('Search component', () => {
     expect(saved).toBe('react');
   });
 
-  it('should trim whitespace from search input before saving', async () => {
-    render(
-      <Provider store={store}>
-        <ThemeProvider>
-          <App />
-        </ThemeProvider>
-      </Provider>
-    );
+  it('should submit trimmed and lowercased search input', async () => {
+    const mockSubmit = vi.fn();
+
+    render(<Search onSubmit={mockSubmit} />);
+
     const input = screen.getByTestId('search-input');
     const button = screen.getByTestId('search-button');
 
     await userEvent.clear(input);
-    await userEvent.type(input, '   React  ');
+    await userEvent.type(input, '   ReAct  ');
     await userEvent.click(button);
 
-    const saved = JSON.parse(localStorage.getItem('searchTerm') || '""');
-    expect(saved).toBe('react');
+    expect(mockSubmit).toHaveBeenCalledWith('react');
   });
 
   it('should trigger search callback with correct parameters', async () => {
