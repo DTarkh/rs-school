@@ -7,12 +7,14 @@ export default function RootLayout() {
   const { theme } = useTheme();
 
   return (
-    <main
-      className={`${theme === 'light' ? 'bg-gray-50' : 'bg-gray-500'} w-full min-h-screen flex flex-col items-center justify-center`}
-    >
-      <Menu />
+    <>
       <Header />
-      <Outlet />
-    </main>
+      <main
+        className={`${theme === 'light' ? 'bg-gray-50' : 'bg-gray-500'} w-full min-h-screen flex flex-col items-center justify-center`}
+      >
+        <Menu />
+        <Outlet />
+      </main>
+    </>
   );
 }
