@@ -1,53 +1,14 @@
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useEffect, useState } from 'react';
 import Spinner from '../components/Spinner';
 import Button from '../components/Button';
-
-type Item = {
-  id: number;
-  title: string;
-  description: string;
-  thumbnail: string;
-  category: string;
-};
+import useFetchSingleProduct from '../hooks/useFetchSingleProduct';
 
 export default function ProductDetails() {
   const params = useParams();
-  const [data, setData] = useState<Item | null>(null);
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const id = params.id;
 
-  useEffect(() => {
-    async function fetchSingleProduct() {
-      setError('');
-      setData(null);
-      setIsLoading(true);
-
-      try {
-        const response = await fetch(
-          'https://dummyjson.com/products/' + params.id
-        );
-
-        if (!response.ok) {
-          setIsLoading(false);
-          setError(`something went wrong ${response.status}`);
-          return;
-        }
-
-        const product = await response.json();
-        setIsLoading(false);
-        setData(product);
-      } catch (error) {
-        setError('Network error. Please check your internet connection.');
-        console.error(error);
-      }
-      setIsLoading(false);
-    }
-
-    fetchSingleProduct();
-  }, [params.id]);
-
+  const { data, error, isLoading } = useFetchSingleProduct({ id });
   const navigate = useNavigate();
 
   if (error) {

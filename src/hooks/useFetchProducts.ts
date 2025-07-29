@@ -39,10 +39,10 @@ export default function useFetchProducts({
           return;
         }
 
-        const json = await res.json();
+        const data = await res.json();
 
-        setData(json.products);
-        setTotal(json.total);
+        setData(data.products);
+        setTotal(data.total);
         setError(false);
         setErrorMessage(null);
       } catch (err) {
