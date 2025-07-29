@@ -29,15 +29,11 @@ export default function Results({ searchTerm, tirggerError, setError }: Props) {
   });
 
   useEffect(() => {
-    function updatePageParam(page: number) {
-      const params = new URLSearchParams(window.location.search);
-      params.set('page', String(page));
-      const newUrl = `${window.location.pathname}?${params.toString()}`;
-      window.history.pushState({}, '', newUrl);
-    }
-
-    updatePageParam(currentPage);
-  });
+    const params = new URLSearchParams(window.location.search);
+    params.set('page', String(currentPage));
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.pushState({}, '', newUrl);
+  }, [currentPage]);
 
   useEffect(() => {
     setCurrentPage(1);
