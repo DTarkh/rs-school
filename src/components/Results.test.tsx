@@ -10,6 +10,9 @@ import {
   mockFetchFailure,
   setSearchTerm,
 } from '../../test-utils/test-utils';
+import { Provider } from 'react-redux';
+import { store } from '../store';
+import { ThemeProvider } from '../contexts/useTheme';
 
 const setErrorMock = vi.fn();
 
@@ -36,11 +39,13 @@ describe('Results List Component', () => {
 
     render(
       <MemoryRouter>
-        <Results
-          searchTerm="item"
-          tirggerError={false}
-          setError={setErrorMock}
-        />
+        <Provider store={store}>
+          <Results
+            searchTerm="item"
+            tirggerError={false}
+            setError={setErrorMock}
+          />
+        </Provider>
       </MemoryRouter>
     );
 
@@ -53,7 +58,13 @@ describe('Results List Component', () => {
     mockFetchSuccess({ products: [] });
 
     render(
-      <Results searchTerm="test" tirggerError={false} setError={setErrorMock} />
+      <MemoryRouter>
+        <Results
+          searchTerm="test"
+          tirggerError={false}
+          setError={setErrorMock}
+        />
+      </MemoryRouter>
     );
 
     expect(
@@ -80,7 +91,13 @@ describe('Results List Component', () => {
     );
 
     render(
-      <Results searchTerm="test" tirggerError={false} setError={setErrorMock} />
+      <MemoryRouter>
+        <Results
+          searchTerm="test"
+          tirggerError={false}
+          setError={setErrorMock}
+        />
+      </MemoryRouter>
     );
 
     expect(screen.getByTestId('loading')).toBeInTheDocument();
@@ -95,13 +112,15 @@ describe('Results List Component', () => {
     );
 
     render(
-      <ErrorBoundary>
-        <Results
-          searchTerm="fail"
-          tirggerError={true}
-          setError={setErrorMock}
-        />
-      </ErrorBoundary>
+      <MemoryRouter>
+        <ErrorBoundary>
+          <Results
+            searchTerm="fail"
+            tirggerError={true}
+            setError={setErrorMock}
+          />
+        </ErrorBoundary>
+      </MemoryRouter>
     );
 
     expect(
@@ -114,7 +133,13 @@ describe('Results List Component', () => {
 
     setSearchTerm('');
 
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    );
 
     expect(
       await screen.findByRole('heading', { name: /error/i })

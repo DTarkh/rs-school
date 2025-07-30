@@ -1,14 +1,44 @@
+import { useDispatch, useSelector } from 'react-redux';
+import { itemsActions } from '../store/items';
 import { Link } from 'react-router-dom';
+import type { ItemsState } from '../store/items';
 
-export default function ResultsItem({
-  id,
-  title,
-  image,
-}: {
+export type ItemProps = {
   id: number;
   title: string;
   image: string;
-}) {
+  quantity?: number;
+  page: number;
+};
+
+export default function ResultsItem({ id, title, image, page }: ItemProps) {
+  const dispatch = useDispatch();
+  const items = useSelector((state: ItemsState) => state.items);
+
+  const isChecked = items.some((item) => item.id === id);
+
+  function checkboxHandler(e: React.ChangeEvent<HTMLInputElement>) {
+    const item = { id, title, image, quantity: 1 };
+    if (e.target.checked) {
+      dispatch(itemsActions.addItem(item));
+    } else {
+      dispatch(itemsActions.removeItem(id));
+    }
+
+    const existingItems: ItemProps[] = JSON.parse(
+      localStorage.getItem('items') || '[]'
+    );
+
+    const itemExists = existingItems.find((item: ItemProps) => item.id === id);
+
+    if (!itemExists) {
+      localStorage.setItem('items', JSON.stringify([...existingItems, item]));
+    } else {
+      const updatedItems = existingItems.filter((item) => item.id !== id);
+      localStorage.setItem('items', JSON.stringify([...updatedItems]));
+    }
+  }
+
   return (
     <div className="flex items-center space-x-4 bg-white rounded-lg shadow-sm border hover:bg-gray-100  p-4">
       <img
@@ -20,12 +50,21 @@ export default function ResultsItem({
         <h3 className="font-medium text-gray-900" data-testid="item-title">
           {title}
         </h3>
-        <Link
-          to={`/product/${id}`}
-          className="hover:text-fuchsia-600 transition-all"
-        >
-          See Details{' '}
-        </Link>
+        <div className="flex gap-7 ">
+          <Link
+            to={`/product/${id}?page=${page}`}
+            className="hover:text-fuchsia-600 transition-all"
+          >
+            See Details{' '}
+          </Link>
+          <input
+            data-testid="checkbox"
+            type="checkbox"
+            className="w-5"
+            onChange={checkboxHandler}
+            checked={isChecked}
+          />
+        </div>
       </div>
     </div>
   );

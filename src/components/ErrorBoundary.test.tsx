@@ -17,6 +17,9 @@ import {
   mockFetchSuccess,
   setSearchTerm,
 } from '../../test-utils/test-utils';
+import { ThemeProvider } from '../contexts/useTheme';
+import { Provider } from 'react-redux';
+import { store } from '../store';
 
 describe('Main app component', () => {
   afterEach(() => {
@@ -49,7 +52,13 @@ describe('Main app component', () => {
 
     setSearchTerm('');
 
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    );
 
     expect(
       await screen.findByRole('heading', { name: /error/i })
@@ -84,7 +93,13 @@ describe('Main app component', () => {
 
     setSearchTerm('');
 
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    );
 
     const button = screen.getByText(/trigger error/i);
     await userEvent.click(button);
@@ -97,7 +112,13 @@ describe('Main app component', () => {
     mockFetchFailure(404);
     setSearchTerm('');
 
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    );
 
     expect(
       await screen.findByText(/something went wrong.*404/i)

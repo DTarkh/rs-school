@@ -8,6 +8,9 @@ import {
   mockFetchFailure,
   setSearchTerm,
 } from '../test-utils/test-utils';
+import { Provider } from 'react-redux';
+import { store } from '../src/store/index';
+import { ThemeProvider } from './contexts/useTheme';
 
 describe('Main app component', () => {
   beforeEach(() => {
@@ -20,7 +23,13 @@ describe('Main app component', () => {
     mockFetchSuccess({ products: [] });
     setSearchTerm('initial');
 
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    );
 
     expect(fetch).toHaveBeenCalledWith(
       'https://dummyjson.com/products/search?q=initial&limit=5&skip=0'
@@ -31,7 +40,13 @@ describe('Main app component', () => {
 
     mockFetchSuccess({ products: [] });
 
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    );
 
     expect(
       await screen.findByText(/no results found for "saved"/i)
@@ -56,7 +71,13 @@ describe('Main app component', () => {
     );
     setSearchTerm('loadingtest');
 
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    );
 
     expect(screen.getByTestId(/loading/i)).toBeInTheDocument();
 
@@ -65,7 +86,13 @@ describe('Main app component', () => {
   it('should call API with correct parameters', async () => {
     mockFetchSuccess({ products: [] });
 
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    );
 
     const input = screen.getByTestId('search-input');
     const button = screen.getByTestId('search-button');
@@ -84,9 +111,15 @@ describe('Main app component', () => {
       ],
     });
 
-    setSearchTerm('react');
+    setSearchTerm('react book');
 
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    );
 
     expect(await screen.findByText(/react book/i)).toBeInTheDocument();
   });
@@ -95,7 +128,13 @@ describe('Main app component', () => {
 
     setSearchTerm('');
 
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    );
 
     expect(
       await screen.findByText(/something went wrong.*500/i)
@@ -115,13 +154,25 @@ describe('Main app component', () => {
 
     setSearchTerm('books');
 
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    );
 
     expect(await screen.findByText(/book a/i)).toBeInTheDocument();
     expect(screen.getByText(/book b/i)).toBeInTheDocument();
   });
   it('should manage search term state correctly', async () => {
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    );
 
     const input = screen.getByTestId('search-input');
     const button = screen.getByTestId('search-button');

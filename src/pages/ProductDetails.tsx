@@ -1,54 +1,16 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import { useEffect, useState } from 'react';
 import Spinner from '../components/Spinner';
 import Button from '../components/Button';
-
-type Item = {
-  id: number;
-  title: string;
-  description: string;
-  thumbnail: string;
-  category: string;
-};
+import useFetchSingleProduct from '../hooks/useFetchSingleProduct';
 
 export default function ProductDetails() {
   const params = useParams();
-  const [data, setData] = useState<Item | null>(null);
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const id = params.id;
 
-  useEffect(() => {
-    async function fetchSingleProduct() {
-      setError('');
-      setData(null);
-      setIsLoading(true);
-
-      try {
-        const response = await fetch(
-          'https://dummyjson.com/products/' + params.id
-        );
-
-        if (!response.ok) {
-          setIsLoading(false);
-          setError(`something went wrong ${response.status}`);
-          return;
-        }
-
-        const product = await response.json();
-        setIsLoading(false);
-        setData(product);
-      } catch (error) {
-        setError('Network error. Please check your internet connection.');
-        console.error(error);
-      }
-      setIsLoading(false);
-    }
-
-    fetchSingleProduct();
-  }, [params.id]);
-
+  const { data, error, isLoading } = useFetchSingleProduct({ id });
   const navigate = useNavigate();
+  const location = useLocation();
 
   if (error) {
     return (
@@ -75,7 +37,9 @@ export default function ProductDetails() {
       )}
       {!isLoading && data && (
         <>
-          <Button onClick={() => navigate('/')}>Back to Products</Button>
+          <Button onClick={() => navigate('/' + location.search)}>
+            Back to Products
+          </Button>
           <div className="aspect-square w-full max-w-md mx-auto mb-6 bg-gray-100 rounded-lg overflow-hidden">
             <img
               src={data.thumbnail}
