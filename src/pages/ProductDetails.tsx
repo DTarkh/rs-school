@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import Spinner from '../components/Spinner';
 import Button from '../components/Button';
@@ -10,6 +10,7 @@ export default function ProductDetails() {
 
   const { data, error, isLoading } = useFetchSingleProduct({ id });
   const navigate = useNavigate();
+  const location = useLocation();
 
   if (error) {
     return (
@@ -36,7 +37,9 @@ export default function ProductDetails() {
       )}
       {!isLoading && data && (
         <>
-          <Button onClick={() => navigate('/')}>Back to Products</Button>
+          <Button onClick={() => navigate('/' + location.search)}>
+            Back to Products
+          </Button>
           <div className="aspect-square w-full max-w-md mx-auto mb-6 bg-gray-100 rounded-lg overflow-hidden">
             <img
               src={data.thumbnail}

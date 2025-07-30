@@ -8,9 +8,10 @@ export type ItemProps = {
   title: string;
   image: string;
   quantity?: number;
+  page: number;
 };
 
-export default function ResultsItem({ id, title, image }: ItemProps) {
+export default function ResultsItem({ id, title, image, page }: ItemProps) {
   const dispatch = useDispatch();
   const items = useSelector((state: ItemsState) => state.items);
   console.log(items);
@@ -51,7 +52,7 @@ export default function ResultsItem({ id, title, image }: ItemProps) {
         </h3>
         <div className="flex gap-7 ">
           <Link
-            to={`/product/${id}`}
+            to={`/product/${id}?page=${page}`}
             className="hover:text-fuchsia-600 transition-all"
           >
             See Details{' '}

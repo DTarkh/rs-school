@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import ResultItem from './ResultItem';
 import Pagination from './Pagination';
 import useFetchProducts from '../hooks/useFetchProducts';
+import { useLocation } from 'react-router-dom';
 
 type Props = {
   searchTerm: string;
@@ -17,7 +18,12 @@ export type Item = {
 };
 
 export default function Results({ searchTerm, tirggerError, setError }: Props) {
-  const [currentPage, setCurrentPage] = useState(1);
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const pageParam = parseInt(params.get('page') || '1', 10);
+  const [currentPage, setCurrentPage] = useState(
+    isNaN(pageParam) || pageParam < 1 ? 1 : pageParam
+  );
   const limit = 5;
   const skip = (currentPage - 1) * limit;
 
@@ -34,10 +40,6 @@ export default function Results({ searchTerm, tirggerError, setError }: Props) {
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.pushState({}, '', newUrl);
   }, [currentPage]);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm]);
 
   if (tirggerError) {
     throw new Error(errorMessage || 'An undexpected error occurred.');
@@ -66,6 +68,7 @@ export default function Results({ searchTerm, tirggerError, setError }: Props) {
                 id={product.id}
                 title={product.title}
                 image={product.thumbnail}
+                page={currentPage}
               />
             ))}
         </div>
