@@ -8,6 +8,7 @@ import { setSearchTerm } from '../../test-utils/test-utils';
 import { Provider } from 'react-redux';
 import { store } from '../store';
 import { ThemeProvider } from '../contexts/useTheme';
+import { MemoryRouter } from 'react-router-dom';
 
 describe('Search component', () => {
   beforeEach(() => {
@@ -20,7 +21,11 @@ describe('Search component', () => {
   });
 
   it('should render search input and search button', () => {
-    render(<Search onSubmit={() => {}} />);
+    render(
+      <MemoryRouter>
+        <Search onSubmit={() => {}} />
+      </MemoryRouter>
+    );
     expect(screen.getByTestId('search-input')).toBeInTheDocument();
     expect(screen.getByTestId('search-button')).toBeInTheDocument();
   });
@@ -51,7 +56,11 @@ describe('Search component', () => {
   });
 
   it('should update input value when user types', async () => {
-    render(<Search onSubmit={() => {}} />);
+    render(
+      <MemoryRouter>
+        <Search onSubmit={() => {}} />
+      </MemoryRouter>
+    );
     const input = screen.getByTestId('search-input');
     await userEvent.clear(input);
     await userEvent.type(input, 'react');
@@ -80,7 +89,11 @@ describe('Search component', () => {
   it('should submit trimmed and lowercased search input', async () => {
     const mockSubmit = vi.fn();
 
-    render(<Search onSubmit={mockSubmit} />);
+    render(
+      <MemoryRouter>
+        <Search onSubmit={mockSubmit} />
+      </MemoryRouter>
+    );
 
     const input = screen.getByTestId('search-input');
     const button = screen.getByTestId('search-button');
@@ -94,7 +107,11 @@ describe('Search component', () => {
 
   it('should trigger search callback with correct parameters', async () => {
     const mockSubmit = vi.fn();
-    render(<Search onSubmit={mockSubmit} />);
+    render(
+      <MemoryRouter>
+        <Search onSubmit={mockSubmit} />
+      </MemoryRouter>
+    );
 
     const input = screen.getByTestId('search-input');
     const button = screen.getByTestId('search-button');
@@ -109,7 +126,11 @@ describe('Search component', () => {
   it('should retrieve saved search term on component mount', () => {
     setSearchTerm('ReactLib');
 
-    render(<Search onSubmit={() => {}} />);
+    render(
+      <MemoryRouter>
+        <Search onSubmit={() => {}} />
+      </MemoryRouter>
+    );
     const input = screen.getByTestId('search-input');
     expect(input).toHaveValue('ReactLib');
   });

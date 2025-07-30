@@ -58,7 +58,13 @@ describe('Results List Component', () => {
     mockFetchSuccess({ products: [] });
 
     render(
-      <Results searchTerm="test" tirggerError={false} setError={setErrorMock} />
+      <MemoryRouter>
+        <Results
+          searchTerm="test"
+          tirggerError={false}
+          setError={setErrorMock}
+        />
+      </MemoryRouter>
     );
 
     expect(
@@ -85,7 +91,13 @@ describe('Results List Component', () => {
     );
 
     render(
-      <Results searchTerm="test" tirggerError={false} setError={setErrorMock} />
+      <MemoryRouter>
+        <Results
+          searchTerm="test"
+          tirggerError={false}
+          setError={setErrorMock}
+        />
+      </MemoryRouter>
     );
 
     expect(screen.getByTestId('loading')).toBeInTheDocument();
@@ -100,13 +112,15 @@ describe('Results List Component', () => {
     );
 
     render(
-      <ErrorBoundary>
-        <Results
-          searchTerm="fail"
-          tirggerError={true}
-          setError={setErrorMock}
-        />
-      </ErrorBoundary>
+      <MemoryRouter>
+        <ErrorBoundary>
+          <Results
+            searchTerm="fail"
+            tirggerError={true}
+            setError={setErrorMock}
+          />
+        </ErrorBoundary>
+      </MemoryRouter>
     );
 
     expect(
