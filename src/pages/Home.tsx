@@ -38,13 +38,11 @@ export default function HomePage() {
           {isInSplitView ? (
             <div className="flex">
               <div className="w-1/2 pr-3 border-r border-gray-200">
-                {searchTerm !== null && (
-                  <Results
-                    searchTerm={searchTerm}
-                    tirggerError={triggerError}
-                    setError={setTriggerError}
-                  />
-                )}
+                <Results
+                  searchTerm={searchTerm}
+                  tirggerError={triggerError}
+                  setError={setTriggerError}
+                />
               </div>
 
               <div className="w-1/2 pl-3">
