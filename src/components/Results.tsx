@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import ResultItem from './ResultItem';
 import Pagination from './Pagination';
 import useFetchProducts from '../hooks/useFetchProducts';
@@ -20,12 +19,12 @@ export type Item = {
 export default function Results({ searchTerm, tirggerError, setError }: Props) {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
+
   const pageParam = parseInt(params.get('page') || '1', 10);
-  const [currentPage, setCurrentPage] = useState(
-    isNaN(pageParam) || pageParam < 1 ? 1 : pageParam
-  );
+  const page = isNaN(pageParam) || pageParam < 1 ? 1 : pageParam;
+
   const limit = 5;
-  const skip = (currentPage - 1) * limit;
+  const skip = (page - 1) * limit;
 
   const { data, isLoading, errorMessage, total } = useFetchProducts({
     searchTerm,
@@ -33,13 +32,6 @@ export default function Results({ searchTerm, tirggerError, setError }: Props) {
     skip,
     limit,
   });
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    params.set('page', String(currentPage));
-    const newUrl = `${window.location.pathname}?${params.toString()}`;
-    window.history.pushState({}, '', newUrl);
-  }, [currentPage]);
 
   if (tirggerError) {
     throw new Error(errorMessage || 'An undexpected error occurred.');
@@ -68,19 +60,14 @@ export default function Results({ searchTerm, tirggerError, setError }: Props) {
                 id={product.id}
                 title={product.title}
                 image={product.thumbnail}
-                page={currentPage}
+                page={page}
               />
             ))}
         </div>
       </div>
       <div className="h-[35px] mt-[25px]">
         {!isLoading && data.length !== 0 && (
-          <Pagination
-            page={currentPage}
-            setPage={setCurrentPage}
-            total={total}
-            limit={limit}
-          />
+          <Pagination page={page} total={total} limit={limit} />
         )}
       </div>
     </>

@@ -1,6 +1,7 @@
 import { type FormEvent, type ChangeEvent } from 'react';
 import Button from './Button';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useNavigate } from 'react-router-dom';
 
 export default function Search({
   onSubmit,
@@ -8,10 +9,18 @@ export default function Search({
   onSubmit: (value: string) => void;
 }) {
   const [inputValue, setInputValue] = useLocalStorage<string>('searchTerm', '');
+  const navigate = useNavigate();
 
   function submitHandler(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    onSubmit(inputValue.trim().toLowerCase());
+    const value = inputValue.trim().toLowerCase();
+    onSubmit(value);
+
+    const params = new URLSearchParams();
+    params.set('page', '1');
+    params.set('search', value);
+
+    navigate({ pathname: '/', search: params.toString() });
   }
 
   function inputHandler(e: ChangeEvent<HTMLInputElement>) {
