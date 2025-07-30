@@ -14,7 +14,7 @@ export type ItemProps = {
 export default function ResultsItem({ id, title, image, page }: ItemProps) {
   const dispatch = useDispatch();
   const items = useSelector((state: ItemsState) => state.items);
-  console.log(items);
+
   const isChecked = items.some((item) => item.id === id);
 
   function checkboxHandler(e: React.ChangeEvent<HTMLInputElement>) {
@@ -58,6 +58,7 @@ export default function ResultsItem({ id, title, image, page }: ItemProps) {
             See Details{' '}
           </Link>
           <input
+            data-testid="checkbox"
             type="checkbox"
             className="w-5"
             onChange={checkboxHandler}
