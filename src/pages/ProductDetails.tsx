@@ -2,25 +2,25 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import Spinner from '../components/Spinner';
 import Button from '../components/Button';
-import useFetchSingleProduct from '../hooks/useFetchSingleProduct';
+import { useGetSingleProductQuery } from '../store/products/productsApiSlice';
 
 export default function ProductDetails() {
   const params = useParams();
   const id = params.id;
 
-  const { data, error, isLoading } = useFetchSingleProduct({ id });
+  const { data, isFetching, isError } = useGetSingleProductQuery({ id });
   const navigate = useNavigate();
   const location = useLocation();
 
-  if (error) {
+  if (isError) {
     return (
       <div className="h-full w-full flex justify-center items-center">
-        {error}
+        An error
       </div>
     );
   }
 
-  if (!data && !isLoading) {
+  if (!data && !isFetching) {
     return (
       <div className="h-full w-full flex justify-center items-center">
         Error, Could not fetch data!
@@ -30,12 +30,12 @@ export default function ProductDetails() {
 
   return (
     <div className="p-6 h-full">
-      {isLoading && (
+      {isFetching && (
         <div className="h-full w-full flex justify-center items-center">
           <Spinner />
         </div>
       )}
-      {!isLoading && data && (
+      {!isFetching && data && (
         <>
           <Button onClick={() => navigate('/' + location.search)}>
             Back to Products
