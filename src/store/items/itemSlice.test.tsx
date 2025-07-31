@@ -2,11 +2,11 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { MemoryRouter } from 'react-router-dom';
-import Results from '../components/Results';
+import Results from '../../components/Results';
 import userEvent from '@testing-library/user-event';
-import { mockFetchSuccess } from '../../test-utils/test-utils';
+import { mockFetchSuccess } from '../../../test-utils/test-utils';
 import { Provider } from 'react-redux';
-import { store } from '.';
+import { store } from '..';
 
 const setErrorMock = vi.fn();
 
@@ -50,9 +50,9 @@ describe('Redux List Component', () => {
 
     // Check Redux store
     const state = store.getState();
-    expect(state.items).toHaveLength(1);
-    expect(state.items[0].title).toBe('Item 1');
-    expect(state.totalQuantity).toBe(1);
+    expect(state.items.items).toHaveLength(1);
+    expect(state.items.items[0].title).toBe('Item 1');
+    expect(state.items.totalQuantity).toBe(1);
 
     // Check localStorage
     const localItems = JSON.parse(localStorage.getItem('items') || '[]');
@@ -82,8 +82,8 @@ describe('Redux List Component', () => {
 
     // Check Redux store
     const state = store.getState();
-    expect(state.items).toHaveLength(0);
-    expect(state.totalQuantity).toBe(0);
+    expect(state.items.items).toHaveLength(0);
+    expect(state.items.totalQuantity).toBe(0);
 
     // Check localStorage
     const localItems = JSON.parse(localStorage.getItem('items') || '[]');

@@ -19,7 +19,7 @@ const initialState: ItemsState = {
   totalQuantity: initialItems.length,
 };
 
-const itemsSlice = createSlice({
+const itemSlice = createSlice({
   name: 'Products',
   initialState,
   reducers: {
@@ -45,5 +45,5 @@ const itemsSlice = createSlice({
   },
 });
 
-export default itemsSlice.reducer;
-export const itemsActions = itemsSlice.actions;
+export default itemSlice.reducer;
+export const itemsActions = itemSlice.actions;

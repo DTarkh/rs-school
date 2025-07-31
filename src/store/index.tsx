@@ -1,4 +1,4 @@
 import { configureStore } from '@reduxjs/toolkit';
-import itemsReducer from './items';
+import itemsReducer from './items/itemSlice';
 
-export const store = configureStore({ reducer: itemsReducer });
+export const store = configureStore({ reducer: { items: itemsReducer } });

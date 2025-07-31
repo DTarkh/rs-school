@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/vitest';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import itemsReducer from '../store/items';
+import itemsReducer from '../../src/store/items/itemSlice';
 import Menu from '../components/Menu';
 
 type Item = {
@@ -20,11 +20,13 @@ type ItemsState = {
 };
 
 function renderWithRedux(
-  initialState: ItemsState = { items: [], totalQuantity: 0 }
+  sliceState: ItemsState = { items: [], totalQuantity: 0 }
 ) {
   const store = configureStore({
-    reducer: itemsReducer,
-    preloadedState: initialState,
+    reducer: { items: itemsReducer },
+    preloadedState: {
+      items: sliceState,
+    },
   });
 
   return {

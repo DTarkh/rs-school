@@ -1,7 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { itemsActions } from '../store/items';
+import { itemsActions } from '../store/items/itemSlice';
 import { Link } from 'react-router-dom';
-import type { ItemsState } from '../store/items';
+import type { ItemsState } from '../store/items/itemSlice';
+
+type Items = {
+  items: ItemsState;
+};
 
 export type ItemProps = {
   id: number;
@@ -13,7 +17,7 @@ export type ItemProps = {
 
 export default function ResultsItem({ id, title, image, page }: ItemProps) {
   const dispatch = useDispatch();
-  const items = useSelector((state: ItemsState) => state.items);
+  const items = useSelector((state: Items) => state.items.items);
 
   const isChecked = items.some((item) => item.id === id);
 
