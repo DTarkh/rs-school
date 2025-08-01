@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { useGetProductsQuery } from '../store/products/productsApiSlice';
 import Spinner from './Spinner';
 import Button from './Button';
+import ErrorMessage from './ErrorMessage';
 
 type Props = {
   searchTerm: string;
@@ -27,7 +28,7 @@ export default function Results({ searchTerm, tirggerError }: Props) {
   const limit = 5;
   const skip = (page - 1) * limit;
 
-  const { data, isFetching, isError, refetch } = useGetProductsQuery({
+  const { data, isFetching, isError, error, refetch } = useGetProductsQuery({
     searchTerm,
     skip,
     limit,
@@ -50,7 +51,7 @@ export default function Results({ searchTerm, tirggerError }: Props) {
         )}
         {isError && (
           <div className="w-full  flex justify-center items-center h-full">
-            <p>An unexpected error occured!</p>
+            <ErrorMessage error={error} />
           </div>
         )}
         {!isFetching && data && data.products.length === 0 && (

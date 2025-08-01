@@ -3,36 +3,26 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 import Button from '../components/Button';
 import { useGetSingleProductQuery } from '../store/products/productsApiSlice';
+import ErrorMessage from '../components/ErrorMessage';
 
 export default function ProductDetails() {
   const params = useParams();
   const id = params.id;
 
-  const { data, isFetching, isError } = useGetSingleProductQuery({ id });
+  const { data, isFetching, isError, error } = useGetSingleProductQuery({ id });
   const navigate = useNavigate();
   const location = useLocation();
-
-  if (isError) {
-    return (
-      <div className="h-full w-full flex justify-center items-center">
-        An error
-      </div>
-    );
-  }
-
-  if (!data && !isFetching) {
-    return (
-      <div className="h-full w-full flex justify-center items-center">
-        Error, Could not fetch data!
-      </div>
-    );
-  }
 
   return (
     <div className="p-6 h-full">
       {isFetching && (
         <div className="h-full w-full flex justify-center items-center">
           <Spinner />
+        </div>
+      )}
+      {isError && (
+        <div className="h-full w-full flex justify-center items-center">
+          <ErrorMessage error={error} />
         </div>
       )}
       {!isFetching && data && (
