@@ -3,6 +3,7 @@ import Pagination from './Pagination';
 import { useLocation } from 'react-router-dom';
 import { useGetProductsQuery } from '../store/products/productsApiSlice';
 import Spinner from './Spinner';
+import Button from './Button';
 
 type Props = {
   searchTerm: string;
@@ -26,7 +27,7 @@ export default function Results({ searchTerm, tirggerError }: Props) {
   const limit = 5;
   const skip = (page - 1) * limit;
 
-  const { data, isFetching, isError } = useGetProductsQuery({
+  const { data, isFetching, isError, refetch } = useGetProductsQuery({
     searchTerm,
     skip,
     limit,
@@ -76,6 +77,9 @@ export default function Results({ searchTerm, tirggerError }: Props) {
           <Pagination page={page} total={data.total} limit={limit} />
         )}
       </div>
+      <Button onClick={() => refetch()} disabled={isFetching}>
+        {isFetching ? 'Refreshing...' : 'Refresh'}
+      </Button>
     </>
   );
 }
