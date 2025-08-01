@@ -13,9 +13,11 @@ export const productsApiSlice = createApi({
     >({
       query: ({ searchTerm, limit, skip }) =>
         `/products/search?q=${searchTerm}&limit=${limit}&skip=${skip}`,
+      keepUnusedDataFor: 60,
     }),
     getSingleProduct: builder.query<ProductItem, { id: string | undefined }>({
       query: ({ id }) => `/products/${id}`,
+      keepUnusedDataFor: 60,
     }),
   }),
 });
