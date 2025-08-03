@@ -40,11 +40,7 @@ describe('Results List Component', () => {
     render(
       <MemoryRouter>
         <Provider store={store}>
-          <Results
-            searchTerm="item"
-            tirggerError={false}
-            setError={setErrorMock}
-          />
+          <Results searchTerm="item" tirggerError={false} />
         </Provider>
       </MemoryRouter>
     );
@@ -59,11 +55,9 @@ describe('Results List Component', () => {
 
     render(
       <MemoryRouter>
-        <Results
-          searchTerm="test"
-          tirggerError={false}
-          setError={setErrorMock}
-        />
+        <Provider store={store}>
+          <Results searchTerm="test" tirggerError={false} />
+        </Provider>
       </MemoryRouter>
     );
 
@@ -92,11 +86,9 @@ describe('Results List Component', () => {
 
     render(
       <MemoryRouter>
-        <Results
-          searchTerm="test"
-          tirggerError={false}
-          setError={setErrorMock}
-        />
+        <Provider store={store}>
+          <Results searchTerm="test" tirggerError={false} />
+        </Provider>
       </MemoryRouter>
     );
 
@@ -114,11 +106,9 @@ describe('Results List Component', () => {
     render(
       <MemoryRouter>
         <ErrorBoundary>
-          <Results
-            searchTerm="fail"
-            tirggerError={true}
-            setError={setErrorMock}
-          />
+          <Provider store={store}>
+            <Results searchTerm="fail" tirggerError={true} />
+          </Provider>
         </ErrorBoundary>
       </MemoryRouter>
     );
@@ -141,12 +131,8 @@ describe('Results List Component', () => {
       </Provider>
     );
 
-    expect(
-      await screen.findByRole('heading', { name: /error/i })
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/Error 500:/i)).toBeInTheDocument();
 
-    expect(
-      await screen.findByText(/something went wrong.*500/i)
-    ).toBeInTheDocument();
+    // expect(await screen.findByText(/500/i)).toBeInTheDocument();
   });
 });

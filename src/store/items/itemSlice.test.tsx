@@ -34,11 +34,7 @@ describe('Redux List Component', () => {
     render(
       <MemoryRouter>
         <Provider store={store}>
-          <Results
-            searchTerm="item"
-            tirggerError={false}
-            setError={setErrorMock}
-          />
+          <Results searchTerm="item" tirggerError={false} />
         </Provider>
       </MemoryRouter>
     );
@@ -66,11 +62,7 @@ describe('Redux List Component', () => {
     render(
       <MemoryRouter>
         <Provider store={store}>
-          <Results
-            searchTerm="item"
-            tirggerError={false}
-            setError={setErrorMock}
-          />
+          <Results searchTerm="item" tirggerError={false} />
         </Provider>
       </MemoryRouter>
     );

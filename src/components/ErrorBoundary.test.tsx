@@ -60,12 +60,10 @@ describe('Main app component', () => {
       </Provider>
     );
 
-    expect(
-      await screen.findByRole('heading', { name: /error/i })
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/Error 500:/i)).toBeInTheDocument();
 
     expect(
-      await screen.findByText(/something went wrong.*500/i)
+      await screen.findByText(/Request failed with status 500/i)
     ).toBeInTheDocument();
   });
   it('should log error to console', () => {
@@ -120,9 +118,9 @@ describe('Main app component', () => {
       </Provider>
     );
 
+    expect(await screen.findByText(/Error 404:/i)).toBeInTheDocument();
     expect(
-      await screen.findByText(/something went wrong.*404/i)
+      screen.getByText(/Request failed with status 404/i)
     ).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /error/i })).toBeInTheDocument();
   });
 });
