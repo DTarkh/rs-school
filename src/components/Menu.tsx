@@ -1,13 +1,19 @@
 import { useDispatch, useSelector } from 'react-redux';
-import type { ItemsState } from '../store/items';
+import type { ItemsState } from '../store/items/itemSlice';
 import Button from './Button';
-import { itemsActions } from '../store/items';
+import { itemsActions } from '../store/items/itemSlice';
 import { convertToCSV } from '../../util/utils';
+
+type Items = {
+  items: ItemsState;
+};
 
 export default function Menu() {
   const dispatch = useDispatch();
-  const items = useSelector((state: ItemsState) => state.items);
-  const totalSelected = useSelector((state: ItemsState) => state.totalQuantity);
+  const items = useSelector((state: Items) => state.items.items);
+  const totalSelected = useSelector(
+    (state: Items) => state.items.totalQuantity
+  );
 
   function handleClick() {
     dispatch(itemsActions.removeAllItems());

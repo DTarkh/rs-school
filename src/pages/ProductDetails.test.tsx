@@ -3,11 +3,12 @@ import { render, screen, waitFor, cleanup } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import ProductDetails from '../pages/ProductDetails';
 import '@testing-library/jest-dom/vitest';
-
 import {
-  mockFetchSuccess,
-  mockFetchFailure,
+  mockDetailsFetchSuccess,
+  mockDetailsFetchFailure,
 } from '../../test-utils/test-utils';
+import { Provider } from 'react-redux';
+import { store } from '../store/index';
 
 const mockProduct = {
   id: 1,
@@ -31,70 +32,75 @@ describe('ProductDetails', () => {
   });
 
   it('renders loading state and then product details after successful fetch', async () => {
-    mockFetchSuccess(mockProduct);
+    mockDetailsFetchSuccess(mockProduct);
 
     render(
-      <MemoryRouter initialEntries={['/product/1']}>
-        <Routes>
-          <Route path="/product/:id" element={<ProductDetails />} />
-        </Routes>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/product/1']}>
+          <Routes>
+            <Route path="/product/:id" element={<ProductDetails />} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>
     );
 
-    expect(screen.getByTestId('spinner')).toBeInTheDocument();
+    waitFor(() => {
+      expect(screen.getByTestId('spinner')).toBeInTheDocument();
+    });
 
     expect(await screen.findByText('Test Product')).toBeInTheDocument();
     expect(screen.getByText(/electronics/i)).toBeInTheDocument();
   });
 
   it('shows error message when API responds with non-OK status', async () => {
-    mockFetchFailure(500);
+    mockDetailsFetchFailure();
 
     render(
-      <MemoryRouter initialEntries={['/product/1']}>
-        <Routes>
-          <Route path="/product/:id" element={<ProductDetails />} />
-        </Routes>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/product/1']}>
+          <Routes>
+            <Route path="/product/:id" element={<ProductDetails />} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>
     );
 
     expect(
-      await screen.findByText(/something went wrong 500/i)
+      await screen.findByText(/Request failed with status 500/i)
     ).toBeInTheDocument();
   });
 
   it('shows network error message when fetch fails', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() => Promise.reject('Network error'))
-    );
+    mockDetailsFetchFailure();
 
     render(
-      <MemoryRouter initialEntries={['/product/1']}>
-        <Routes>
-          <Route path="/product/:id" element={<ProductDetails />} />
-        </Routes>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/product/1']}>
+          <Routes>
+            <Route path="/product/:id" element={<ProductDetails />} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>
     );
 
     await waitFor(() => {
       expect(
-        screen.getByText(
-          /Network error. Please check your internet connection./i
-        )
+        screen.getByText(/Request failed with status 500/i)
       ).toBeInTheDocument();
     });
   });
 
   it('shows fallback error message if data is null and not loading', async () => {
-    mockFetchFailure(404);
+    mockDetailsFetchFailure(404);
 
     render(
-      <MemoryRouter initialEntries={['/product/123456']}>
-        <Routes>
-          <Route path="/product/:id" element={<ProductDetails />} />
-        </Routes>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/product/123456']}>
+          <Routes>
+            <Route path="/product/:id" element={<ProductDetails />} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>
     );
 
     await waitFor(() => {
@@ -102,7 +108,7 @@ describe('ProductDetails', () => {
     });
 
     expect(
-      await screen.findByText(/something went wrong 404/i)
+      await screen.findByText(/Request failed with status 404/i)
     ).toBeInTheDocument();
   });
 });

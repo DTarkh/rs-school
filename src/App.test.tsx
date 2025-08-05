@@ -7,10 +7,12 @@ import {
   mockFetchSuccess,
   mockFetchFailure,
   setSearchTerm,
+  mockLoadingFetchSuccess,
 } from '../test-utils/test-utils';
 import { Provider } from 'react-redux';
 import { store } from '../src/store/index';
 import { ThemeProvider } from './contexts/useTheme';
+import * as api from '../src/store/products/productsApiSlice';
 
 describe('Main app component', () => {
   beforeEach(() => {
@@ -20,7 +22,19 @@ describe('Main app component', () => {
     cleanup();
   });
   it('should make initial API call on component mount', () => {
-    mockFetchSuccess({ products: [] });
+    const mockFn = vi.fn();
+
+    vi.spyOn(api, 'useGetProductsQuery').mockImplementation((args) => {
+      mockFn(args);
+      return {
+        data: { products: [] },
+        isLoading: false,
+        isFetching: false,
+        isError: false,
+        error: null,
+        refetch: vi.fn(),
+      };
+    });
     setSearchTerm('initial');
 
     render(
@@ -31,9 +45,11 @@ describe('Main app component', () => {
       </Provider>
     );
 
-    expect(fetch).toHaveBeenCalledWith(
-      'https://dummyjson.com/products/search?q=initial&limit=5&skip=0'
-    );
+    expect(mockFn).toHaveBeenCalledWith({
+      searchTerm: 'initial',
+      limit: 5,
+      skip: 0,
+    });
   });
   it('should handle search term from localStorage on initial load', async () => {
     setSearchTerm('saved');
@@ -53,22 +69,7 @@ describe('Main app component', () => {
     ).toBeInTheDocument();
   });
   it('should manage loading states during API calls', async () => {
-    const fetchPromise = new Promise<{
-      ok: boolean;
-      json: () => Promise<{ products: [] }>;
-    }>((resolve) => {
-      setTimeout(() => {
-        resolve({
-          ok: true,
-          json: () => Promise.resolve({ products: [] }),
-        });
-      }, 50); // simulate short delay
-    });
-
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() => fetchPromise)
-    );
+    mockLoadingFetchSuccess();
     setSearchTerm('loadingtest');
 
     render(
@@ -81,10 +82,34 @@ describe('Main app component', () => {
 
     expect(screen.getByTestId(/loading/i)).toBeInTheDocument();
 
-    expect(await screen.findByText(/no results/i)).toBeInTheDocument();
+    mockFetchSuccess({ products: [] });
+
+    render(
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    );
+
+    expect(
+      await screen.findByText(/No results found for "loadingtest"/i)
+    ).toBeInTheDocument();
   });
   it('should call API with correct parameters', async () => {
-    mockFetchSuccess({ products: [] });
+    const mockFn = vi.fn();
+
+    vi.spyOn(api, 'useGetProductsQuery').mockImplementation((args) => {
+      mockFn(args);
+      return {
+        data: { products: [] },
+        isLoading: false,
+        isFetching: false,
+        isError: false,
+        error: null,
+        refetch: vi.fn(),
+      };
+    });
 
     render(
       <Provider store={store}>
@@ -100,9 +125,11 @@ describe('Main app component', () => {
     await userEvent.type(input, 'React');
     await userEvent.click(button);
 
-    expect(fetch).toHaveBeenCalledWith(
-      'https://dummyjson.com/products/search?q=react&limit=5&skip=0'
-    );
+    expect(mockFn).toHaveBeenCalledWith({
+      searchTerm: 'react',
+      limit: 5,
+      skip: 0,
+    });
   });
   it('should handle successful API responses', async () => {
     mockFetchSuccess({
@@ -136,12 +163,10 @@ describe('Main app component', () => {
       </Provider>
     );
 
-    expect(
-      await screen.findByText(/something went wrong.*500/i)
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/Error 500:/i)).toBeInTheDocument();
 
     expect(
-      await screen.findByRole('heading', { name: /error/i })
+      await screen.findByText(/Request failed with status 500/i)
     ).toBeInTheDocument();
   });
   it('should update component state based on API responses', async () => {
