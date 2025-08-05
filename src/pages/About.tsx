@@ -5,7 +5,7 @@ export default function AboutPage() {
         <div className="mt-25">
           <div className="flex flex-col sm:flex-row items-center gap-7">
             <div className="h-[200px] w-[200px] rounded-full overflow-hidden">
-              <img src="/dd.jpg" alt="" />
+              <img src="/dd.jpg" alt="David Tarkhnishvili profile" />
             </div>
             <div className="flex flex-col gap-2">
               <h3 className="text-zinc-700 text-3xl font-bold">
