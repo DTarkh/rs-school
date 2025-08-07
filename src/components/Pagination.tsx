@@ -1,5 +1,3 @@
-import { useNavigate, useLocation } from 'react-router-dom';
-
 export default function Pagination({
   page,
   total,
@@ -10,13 +8,11 @@ export default function Pagination({
   limit: number;
 }) {
   const totalPages = Math.ceil(total / limit);
-  const navigate = useNavigate();
-  const location = useLocation();
 
   const changePage = (newPage: number) => {
     const params = new URLSearchParams(location.search);
     params.set('page', String(newPage));
-    navigate({ pathname: location.pathname, search: params.toString() });
+    // navigate({ pathname: location.pathname, search: params.toString() });
   };
 
   const clsForButton =

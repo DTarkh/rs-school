@@ -1,7 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { itemsActions } from '../store/items/itemSlice';
-import { Link } from 'react-router-dom';
+
 import type { ItemsState } from '../store/items/itemSlice';
+import Link from 'next/link';
 
 type Items = {
   items: ItemsState;
@@ -56,7 +57,7 @@ export default function ResultsItem({ id, title, image, page }: ItemProps) {
         </h3>
         <div className="flex gap-7 ">
           <Link
-            to={`/product/${id}?page=${page}`}
+            href={`/product/${id}?page=${page}`}
             className="hover:text-fuchsia-600 transition-all"
           >
             See Details{' '}

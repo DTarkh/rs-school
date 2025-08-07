@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext, useContext, useState, type ReactNode } from 'react';
 type ThemeContextType = {
   theme: string;
@@ -8,17 +10,13 @@ type Props = {
   children: ReactNode;
 };
 
-const initialTheme = localStorage.getItem('theme') || '';
-
 const ThemeContext = createContext<ThemeContextType>({
-  theme: initialTheme,
+  theme: 'dark',
   toggleTheme: () => {},
 });
 
 export function ThemeProvider({ children }: Props) {
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('theme') || 'light';
-  });
+  const [theme, setTheme] = useState('light');
 
   function toggleTheme() {
     setTheme((prev: string) => {

@@ -1,9 +1,13 @@
-import type { Metadata } from 'next';
-import Header from '../components/Header';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'Rs school project',
-};
+import Header from '../components/Header';
+import { Provider } from 'react-redux';
+import { store } from '../../src/store/index';
+import { ThemeProvider } from '../contexts/useTheme';
+
+// export const metadata: Metadata = {
+//   title: 'Rs school project',
+// };
 
 export default function RootLayout({
   children,
@@ -14,9 +18,16 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Header />
-        <div id="root"></div>
-        <script type="module" src="/src/main.tsx"></script>
-        <div id="root">{children}</div>
+        <Provider store={store}>
+          <ThemeProvider>
+            <main
+              id="root"
+              className="bg-gray-50 w-full min-h-screen flex flex-col items-center justify-center p-6"
+            >
+              {children}
+            </main>
+          </ThemeProvider>
+        </Provider>
       </body>
     </html>
   );

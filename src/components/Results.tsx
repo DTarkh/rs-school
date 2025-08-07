@@ -1,6 +1,6 @@
 import ResultItem from './ResultItem';
 import Pagination from './Pagination';
-import { useLocation } from 'react-router-dom';
+
 import { useGetProductsQuery } from '../store/products/productsApiSlice';
 import Spinner from './Spinner';
 import Button from './Button';
@@ -19,8 +19,7 @@ export type Item = {
 };
 
 export default function Results({ searchTerm, tirggerError }: Props) {
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
+  const params = new URLSearchParams();
 
   const pageParam = parseInt(params.get('page') || '1', 10);
   const page = isNaN(pageParam) || pageParam < 1 ? 1 : pageParam;

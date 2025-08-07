@@ -1,6 +1,7 @@
+'use client';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-const initialItems = JSON.parse(localStorage.getItem('items') || '[]');
+// const initialItems = JSON.parse(localStorage.getItem('items') || '[]');
 
 type Item = {
   id: number;
@@ -15,8 +16,8 @@ export type ItemsState = {
 };
 
 const initialState: ItemsState = {
-  items: initialItems,
-  totalQuantity: initialItems.length,
+  items: [],
+  totalQuantity: 0,
 };
 
 const itemSlice = createSlice({
