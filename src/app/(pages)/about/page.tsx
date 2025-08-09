@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 export default function AboutPage() {
   return (
     <>
@@ -5,7 +7,13 @@ export default function AboutPage() {
         <div className="mt-25">
           <div className="flex flex-col sm:flex-row items-center gap-7">
             <div className="h-[200px] w-[200px] rounded-full overflow-hidden">
-              <img src="/dd.jpg" alt="David Tarkhnishvili profile" />
+              <Image
+                src="/dd.jpg"
+                alt="David Tarkhnishvili profile"
+                width={200}
+                height={200}
+                objectFit="cover"
+              />
             </div>
             <div className="flex flex-col gap-2">
               <h3 className="text-zinc-700 text-3xl font-bold">
