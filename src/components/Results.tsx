@@ -1,15 +1,4 @@
 import ResultItem from './ResultItem';
-import Pagination from './Pagination';
-
-import { useGetProductsQuery } from '../store/products/productsApiSlice';
-import Spinner from './Spinner';
-import Button from './Button';
-import ErrorMessage from './ErrorMessage';
-
-type Props = {
-  searchTerm: string;
-  tirggerError: boolean;
-};
 
 export type Item = {
   id: number;
@@ -18,29 +7,14 @@ export type Item = {
   thumbnail: string;
 };
 
-export default function Results({ searchTerm, tirggerError }: Props) {
-  const params = new URLSearchParams();
-
-  const pageParam = parseInt(params.get('page') || '1', 10);
-  const page = isNaN(pageParam) || pageParam < 1 ? 1 : pageParam;
-
-  const limit = 5;
-  const skip = (page - 1) * limit;
-
-  const { data, isFetching, isError, error, refetch } = useGetProductsQuery({
-    searchTerm,
-    skip,
-    limit,
-  });
-
-  if (tirggerError) {
-    throw new Error('An undexpected error occurred.');
-  }
+export default async function Results() {
+  const response = await fetch('https://dummyjson.com/products');
+  const data = await response.json();
 
   return (
     <>
       <div className="border rounded-md  p-3 h-[600px]">
-        {isFetching && (
+        {/* {isFetching && (
           <div
             className="w-full  flex justify-center items-center h-full"
             data-testid="loading"
@@ -52,34 +26,24 @@ export default function Results({ searchTerm, tirggerError }: Props) {
           <div className="w-full  flex justify-center items-center h-full">
             <ErrorMessage error={error} />
           </div>
-        )}
-        {!isFetching && data && data.products.length === 0 && (
+        )} */}
+        {data && data.products.length === 0 && (
           <div className="w-full  flex items-center justify-center h-full">
-            <p>No results found for &quot;{searchTerm}&quot;.</p>
+            <p>No results found for &quot;&quot;.</p>
           </div>
         )}
         <div className="grid grid-cols-1 gap-4  overflow-y-auto">
-          {!isFetching &&
-            data &&
+          {data &&
             data.products.map((product) => (
               <ResultItem
                 key={product.id}
                 id={product.id}
                 title={product.title}
                 image={product.thumbnail}
-                page={page}
               />
             ))}
         </div>
       </div>
-      <div className="h-[35px] mt-[25px]">
-        {data && !isFetching && data.products.length !== 0 && (
-          <Pagination page={page} total={data.total} limit={limit} />
-        )}
-      </div>
-      <Button onClick={() => refetch()} disabled={isFetching}>
-        {isFetching ? 'Refreshing...' : 'Refresh'}
-      </Button>
     </>
   );
 }

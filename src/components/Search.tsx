@@ -1,12 +1,10 @@
+'use client';
+
 import { type FormEvent, type ChangeEvent } from 'react';
 import Button from './Button';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
-export default function Search({
-  onSubmit,
-}: {
-  onSubmit: (value: string) => void;
-}) {
+export default function Search() {
   const [inputValue, setInputValue] = useLocalStorage<string>('searchTerm', '');
 
   function submitHandler(e: FormEvent<HTMLFormElement>) {

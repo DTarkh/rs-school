@@ -1,3 +1,7 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+
 export default function Pagination({
   page,
   total,
@@ -7,12 +11,14 @@ export default function Pagination({
   total: number;
   limit: number;
 }) {
+  const router = useRouter();
+
   const totalPages = Math.ceil(total / limit);
 
   const changePage = (newPage: number) => {
     const params = new URLSearchParams(location.search);
     params.set('page', String(newPage));
-    // navigate({ pathname: location.pathname, search: params.toString() });
+    router.push(`${window.location.pathname}?${params.toString()}`);
   };
 
   const clsForButton =

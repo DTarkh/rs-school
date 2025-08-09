@@ -1,42 +1,26 @@
-'use client';
-
 import Button from '../../../components/Button';
 import Search from '../../../components/Search';
 import Results from '../../../components/Results';
 
-import { useState } from 'react';
-import { useLocalStorage } from '../../../hooks/useLocalStorage';
-
 export default function HomePage() {
-  const [triggerError, setTriggerError] = useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = useLocalStorage('searchTerm', '');
-
-  function handleSubmit(value: string) {
-    setSearchTerm(value);
-  }
-  function onTriggerError() {
-    setTriggerError(true);
-  }
-
   return (
     <>
       <div className="layout border p-4 rounded-xl border-gray-400 bg-white mt-[75px]">
-        <Search onSubmit={handleSubmit} />
+        <Search />
       </div>
-      {/* <ErrorBoundary> */}
+
       <div className="layout mt-[20px]">
         <div className="flex justify-between items-center pb-3">
           <h1 className="text-2xl pb-[10px] text-start font-semibold">
             Results
           </h1>
-          <Button onClick={onTriggerError}>Trigger Error</Button>
+          <Button>Trigger Error</Button>
         </div>
 
         <div>
-          <Results searchTerm={searchTerm} tirggerError={triggerError} />
+          <Results />
         </div>
       </div>
-      {/* </ErrorBoundary> */}
     </>
   );
 }

@@ -1,3 +1,5 @@
+'use client';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { itemsActions } from '../store/items/itemSlice';
 
@@ -13,10 +15,9 @@ export type ItemProps = {
   title: string;
   image: string;
   quantity?: number;
-  page: number;
 };
 
-export default function ResultsItem({ id, title, image, page }: ItemProps) {
+export default function ResultsItem({ id, title, image }: ItemProps) {
   const dispatch = useDispatch();
   const items = useSelector((state: Items) => state.items.items);
 
@@ -57,7 +58,7 @@ export default function ResultsItem({ id, title, image, page }: ItemProps) {
         </h3>
         <div className="flex gap-7 ">
           <Link
-            href={`/products/${id}?page=${page}`}
+            href={`/products/${id}`}
             className="hover:text-fuchsia-600 transition-all"
           >
             See Details{' '}
