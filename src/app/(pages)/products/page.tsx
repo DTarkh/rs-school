@@ -2,12 +2,12 @@ import Button from '../../../components/Button';
 import Search from '../../../components/Search';
 import Results from '../../../components/Results';
 
-export default function HomePage({
+export default async function HomePage({
   searchParams,
 }: {
   searchParams: { page?: string; search?: string };
 }) {
-  const { search } = searchParams;
+  const { search, page } = await searchParams;
 
   return (
     <>
@@ -24,7 +24,7 @@ export default function HomePage({
         </div>
 
         <div>
-          <Results searchTerm={search} />
+          <Results searchTerm={search} page={Number(page)} />
         </div>
       </div>
     </>

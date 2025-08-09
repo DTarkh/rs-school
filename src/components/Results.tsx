@@ -10,12 +10,21 @@ type APIResponse = {
   products: Item[];
 };
 
-export default async function Results({ searchTerm }: { searchTerm?: string }) {
+export default async function Results({
+  searchTerm,
+  page,
+}: {
+  searchTerm?: string;
+  page?: number;
+}) {
   let data: APIResponse | null = null;
+
+  const limit = 5;
+  const skip = (page ? page - 1 : 0) * limit;
 
   try {
     const res = await fetch(
-      `https://dummyjson.com/products/search?q=${searchTerm ?? ''}`
+      `https://dummyjson.com/products/search?q=${searchTerm ?? ''}&limit=${limit}&skip=${skip}`
     );
     if (!res.ok) {
       return <div>Error: Failed to fetch data (status {res.status})</div>;
