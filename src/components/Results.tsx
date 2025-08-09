@@ -1,49 +1,50 @@
 import ResultItem from './ResultItem';
 
-export type Item = {
+type Item = {
   id: number;
   title: string;
-  description: string;
   thumbnail: string;
 };
 
+type APIResponse = {
+  products: Item[];
+};
+
 export default async function Results() {
-  const response = await fetch('https://dummyjson.com/products');
-  const data = await response.json();
+  let data: APIResponse | null = null;
+
+  try {
+    const res = await fetch('https://dummyjson.com/products', {
+      cache: 'no-store',
+    });
+    if (!res.ok) {
+      return <div>Error: Failed to fetch data (status {res.status})</div>;
+    }
+    data = (await res.json()) as APIResponse;
+  } catch (err) {
+    return <div>Error: {String(err)}</div>;
+  }
+
+  if (!data || data.products.length === 0) {
+    return (
+      <div className="border rounded-md p-3 h-[600px] flex items-center justify-center">
+        <p>No results found.</p>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div className="border rounded-md  p-3 h-[600px]">
-        {/* {isFetching && (
-          <div
-            className="w-full  flex justify-center items-center h-full"
-            data-testid="loading"
-          >
-            <Spinner />
-          </div>
-        )}
-        {isError && (
-          <div className="w-full  flex justify-center items-center h-full">
-            <ErrorMessage error={error} />
-          </div>
-        )} */}
-        {data && data.products.length === 0 && (
-          <div className="w-full  flex items-center justify-center h-full">
-            <p>No results found for &quot;&quot;.</p>
-          </div>
-        )}
-        <div className="grid grid-cols-1 gap-4  overflow-y-auto">
-          {data &&
-            data.products.map((product) => (
-              <ResultItem
-                key={product.id}
-                id={product.id}
-                title={product.title}
-                image={product.thumbnail}
-              />
-            ))}
-        </div>
+    <div className="border rounded-md p-3 h-[600px]">
+      <div className="grid grid-cols-1 gap-4 overflow-y-auto">
+        {data.products.map((p) => (
+          <ResultItem
+            key={p.id}
+            id={p.id}
+            title={p.title}
+            image={p.thumbnail}
+          />
+        ))}
       </div>
-    </>
+    </div>
   );
 }
