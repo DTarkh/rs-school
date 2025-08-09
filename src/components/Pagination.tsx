@@ -24,8 +24,10 @@ export default function Pagination({
   const clsForButton =
     'px-5 py-1 border rounded-2xl hover:cursor-pointer bg-amber-300 hover:bg-amber-400 transition-all disabled:bg-gray-300 disabled:border-gray-200 disabled:text-gray-400';
 
+  if (total <= 1) return null;
+
   return (
-    <div className="flex gap-2 justify-center items-center">
+    <div className="flex gap-2 justify-center items-center mt-2">
       <button
         onClick={() => changePage(page - 1)}
         disabled={page === 1}

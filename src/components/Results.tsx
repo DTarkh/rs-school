@@ -1,3 +1,4 @@
+import Pagination from './Pagination';
 import ResultItem from './ResultItem';
 
 type Item = {
@@ -8,6 +9,7 @@ type Item = {
 
 type APIResponse = {
   products: Item[];
+  total: number;
 };
 
 export default async function Results({
@@ -43,17 +45,20 @@ export default async function Results({
   }
 
   return (
-    <div className="border rounded-md p-3 h-[600px]">
-      <div className="grid grid-cols-1 gap-4 overflow-y-auto">
-        {data.products.map((p) => (
-          <ResultItem
-            key={p.id}
-            id={p.id}
-            title={p.title}
-            image={p.thumbnail}
-          />
-        ))}
+    <>
+      <div className="border rounded-md p-3 h-[600px]">
+        <div className="grid grid-cols-1 gap-4 overflow-y-auto">
+          {data.products.map((p) => (
+            <ResultItem
+              key={p.id}
+              id={p.id}
+              title={p.title}
+              image={p.thumbnail}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+      <Pagination page={page || 1} total={data.total} limit={5} />
+    </>
   );
 }
