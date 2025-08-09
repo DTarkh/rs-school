@@ -11,8 +11,6 @@ export default function HomePage() {
   const [triggerError, setTriggerError] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useLocalStorage('searchTerm', '');
 
-  //   const isInSplitView = location.pathname.includes('/product/');
-
   function handleSubmit(value: string) {
     setSearchTerm(value);
   }

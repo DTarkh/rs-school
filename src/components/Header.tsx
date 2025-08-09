@@ -7,10 +7,10 @@ export default function Header() {
         <ul className="flex items-center justify-center gap-2 py-4">
           <li>
             <Link
-              href="/home"
+              href="/products"
               className="flex items-center gap-1 px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-gray-700 hover:text-purple-600 hover:bg-purple-50"
             >
-              Home
+              Products
             </Link>
           </li>
           <li>

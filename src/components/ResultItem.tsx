@@ -57,7 +57,7 @@ export default function ResultsItem({ id, title, image, page }: ItemProps) {
         </h3>
         <div className="flex gap-7 ">
           <Link
-            href={`/product/${id}?page=${page}`}
+            href={`/products/${id}?page=${page}`}
             className="hover:text-fuchsia-600 transition-all"
           >
             See Details{' '}
