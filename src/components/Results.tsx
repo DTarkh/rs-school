@@ -10,13 +10,13 @@ type APIResponse = {
   products: Item[];
 };
 
-export default async function Results() {
+export default async function Results({ searchTerm }: { searchTerm?: string }) {
   let data: APIResponse | null = null;
 
   try {
-    const res = await fetch('https://dummyjson.com/products', {
-      cache: 'no-store',
-    });
+    const res = await fetch(
+      `https://dummyjson.com/products/search?q=${searchTerm ?? ''}`
+    );
     if (!res.ok) {
       return <div>Error: Failed to fetch data (status {res.status})</div>;
     }
@@ -28,7 +28,7 @@ export default async function Results() {
   if (!data || data.products.length === 0) {
     return (
       <div className="border rounded-md p-3 h-[600px] flex items-center justify-center">
-        <p>No results found.</p>
+        <p>No results found for &quot;{searchTerm}&quot;.</p>
       </div>
     );
   }

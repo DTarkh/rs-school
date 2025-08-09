@@ -1,22 +1,34 @@
 'use client';
 
-import { type FormEvent, type ChangeEvent } from 'react';
+import { type FormEvent, type ChangeEvent, useEffect } from 'react';
 import Button from './Button';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useRouter } from 'next/navigation';
 
 export default function Search() {
+  const router = useRouter();
+
   const [inputValue, setInputValue] = useLocalStorage<string>('searchTerm', '');
 
-  function submitHandler(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  useEffect(() => {
     const value = inputValue.trim().toLowerCase();
-    onSubmit(value);
 
     const params = new URLSearchParams();
     params.set('page', '1');
     params.set('search', value);
 
-    // navigate({ pathname: '/', search: params.toString() });
+    router.push(`products?${params.toString()}`);
+  }, []);
+
+  function submitHandler(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const value = inputValue.trim().toLowerCase();
+
+    const params = new URLSearchParams();
+    params.set('page', '1');
+    params.set('search', value);
+
+    router.push(`products?${params.toString()}`);
   }
 
   function inputHandler(e: ChangeEvent<HTMLInputElement>) {
