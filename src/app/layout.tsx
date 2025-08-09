@@ -1,14 +1,7 @@
-'use client';
-
 import '../globals.css';
-import Header from '../components/Header';
-import { Provider } from 'react-redux';
-import { store } from '../../src/store/index';
-import { ThemeProvider } from '../contexts/useTheme';
-
-// export const metadata: Metadata = {
-//   title: 'Rs school project',
-// };
+import Providers from './providers'; // client wrapper
+import Header from '../components/Header'; // can be client or server
+import Menu from '../components/Menu'; // can be client or server
 
 export default function RootLayout({
   children,
@@ -18,17 +11,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Header />
-        <Provider store={store}>
-          <ThemeProvider>
-            <main
-              id="root"
-              className="bg-gray-50 w-full min-h-screen flex flex-col items-center justify-center p-6"
-            >
-              {children}
-            </main>
-          </ThemeProvider>
-        </Provider>
+        <Providers>
+          <Header />
+          <main
+            id="root"
+            className="bg-gray-50 w-full min-h-screen flex flex-col items-center justify-center p-6"
+          >
+            <Menu />
+            {children}
+          </main>
+        </Providers>
       </body>
     </html>
   );

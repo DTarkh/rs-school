@@ -1,3 +1,5 @@
+'use client';
+
 import { useDispatch, useSelector } from 'react-redux';
 import type { ItemsState } from '../store/items/itemSlice';
 import Button from './Button';
