@@ -1,14 +1,7 @@
 'use client';
 import Link from 'next/link';
-import { ReadonlyURLSearchParams, useSearchParams } from 'next/navigation';
-
-function withCurrentQuery(
-  pathname: string,
-  sp: ReadonlyURLSearchParams | null
-) {
-  const query = sp ? sp.toString() : '';
-  return query ? `${pathname}?${query}` : pathname;
-}
+import { useSearchParams } from 'next/navigation';
+import { withCurrentQuery } from '../../util/utils';
 
 export default function Header() {
   const searchParams = useSearchParams();

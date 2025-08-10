@@ -1,3 +1,5 @@
+import { ReadonlyURLSearchParams } from 'next/navigation';
+
 type Items = {
   [key: string]: string | number;
   id: number;
@@ -15,4 +17,12 @@ export function convertToCSV(items: Items[]) {
   );
 
   return [headers.join(','), ...rows].join('\n');
+}
+
+export function withCurrentQuery(
+  pathname: string,
+  sp: ReadonlyURLSearchParams | null
+) {
+  const query = sp ? sp.toString() : '';
+  return query ? `${pathname}?${query}` : pathname;
 }

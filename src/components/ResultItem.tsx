@@ -5,6 +5,7 @@ import { itemsActions } from '../store/items/itemSlice';
 
 import type { ItemsState } from '../store/items/itemSlice';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 type Items = {
   items: ItemsState;
@@ -20,6 +21,7 @@ export type ItemProps = {
 export default function ResultsItem({ id, title, image }: ItemProps) {
   const dispatch = useDispatch();
   const items = useSelector((state: Items) => state.items.items);
+  const searchParams = useSearchParams();
 
   const isChecked = items.some((item) => item.id === id);
 
@@ -58,7 +60,7 @@ export default function ResultsItem({ id, title, image }: ItemProps) {
         </h3>
         <div className="flex gap-7 ">
           <Link
-            href={`/products/${id}`}
+            href={`/products/${id}?${new URLSearchParams(searchParams).toString()}`}
             className="hover:text-fuchsia-600 transition-all"
           >
             See Details{' '}
