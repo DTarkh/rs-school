@@ -32,7 +32,7 @@ export default function Search() {
         onChange={inputHandler}
         value={inputValue}
         type="text"
-        className="border rounded-xl outline-fuchsia-600 text-zinc-800 px-[10px] py-[7px] w-full border-gray-400"
+        className="border rounded-xl outline-fuchsia-600 text-zinc-800 px-[10px] py-[7px] w-full border-gray-400 mr-2"
       />
       <Button data-testid="search-button">Search</Button>
     </form>

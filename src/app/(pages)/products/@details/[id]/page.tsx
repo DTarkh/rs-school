@@ -1,11 +1,11 @@
 import Link from 'next/link';
-
+export const dynamic = 'force-dynamic';
 export default async function ProductDetailsPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const { id } = params;
+  const { id } = await params;
 
   const res = await fetch(`https://dummyjson.com/products/${id}`);
   if (!res.ok) {
@@ -20,7 +20,9 @@ export default async function ProductDetailsPage({
   return (
     <div className="p-6 h-full">
       <>
-        <Link href={`/products`}>Back to Products</Link>
+        <Link href={`/products`} className="hover:underline">
+          Back to Products
+        </Link>
         <div className="aspect-square w-full max-w-md mx-auto mb-6 bg-gray-100 rounded-lg overflow-hidden">
           <img
             src={data.thumbnail}
