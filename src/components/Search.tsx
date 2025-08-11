@@ -3,10 +3,14 @@
 import { type FormEvent, type ChangeEvent } from 'react';
 import Button from './Button';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export default function Search() {
   const router = useRouter();
+  const path = usePathname();
+  const searchParams = useSearchParams();
+
+  console.log('path', path);
 
   const [inputValue, setInputValue] = useLocalStorage<string>('searchTerm', '');
 
@@ -14,11 +18,13 @@ export default function Search() {
     e.preventDefault();
     const value = inputValue.trim().toLowerCase();
 
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(searchParams?.toString() ?? '');
     params.set('page', '1');
     params.set('search', value);
 
-    router.push(`products?${params.toString()}`);
+    const targetPath = path?.startsWith('/products/') ? '/products' : path;
+
+    router.push(`${targetPath}?${params.toString()}`);
   }
 
   function inputHandler(e: ChangeEvent<HTMLInputElement>) {

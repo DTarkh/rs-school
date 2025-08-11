@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export default function Pagination({
   page,
@@ -12,13 +12,17 @@ export default function Pagination({
   limit: number;
 }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const path = usePathname();
 
   const totalPages = Math.ceil(total / limit);
 
   const changePage = (newPage: number) => {
-    const params = new URLSearchParams(location.search);
+    const params = new URLSearchParams(searchParams?.toString() ?? '');
     params.set('page', String(newPage));
-    router.push(`${window.location.pathname}?${params.toString()}`);
+
+    const targetPath = path?.startsWith('/products/') ? '/products' : path;
+    router.push(`${targetPath}?${params.toString()}`);
   };
 
   const clsForButton =
