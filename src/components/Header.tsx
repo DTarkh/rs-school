@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import { withCurrentQuery } from '../../util/utils';
 import { useTranslations } from 'next-intl';
 import { Link } from '../i18n/navigation';
+import LanguageSwitch from './LanguageSwitch';
 
 export default function Header() {
   const searchParams = useSearchParams();
@@ -29,6 +30,7 @@ export default function Header() {
             </Link>
           </li>
         </ul>
+        <LanguageSwitch />
         {/* <Themeswitch /> */}
       </nav>
     </header>
