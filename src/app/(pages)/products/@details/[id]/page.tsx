@@ -2,12 +2,16 @@ import Link from 'next/link';
 export const dynamic = 'force-dynamic';
 export default async function ProductDetailsPage({
   params,
+  searchParams,
 }: {
   params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const { id } = await params;
+  const { id } = params;
 
-  const res = await fetch(`https://dummyjson.com/products/${id}`);
+  const res = await fetch(`https://dummyjson.com/products/${id}`, {
+    next: { revalidate: 300 },
+  });
   if (!res.ok) {
     return <div>Error: Failed to fetch data (status {res.status})</div>;
   }
@@ -17,10 +21,18 @@ export default async function ProductDetailsPage({
     return <div>Error: Product not found.</div>;
   }
 
+  const query = JSON.parse(
+    JSON.stringify({
+      ...searchParams,
+    })
+  );
   return (
     <div className="p-6 h-full">
       <>
-        <Link href={`/products`} className="hover:underline">
+        <Link
+          href={{ pathname: '/products', query }}
+          className="hover:underline"
+        >
           Back to Products
         </Link>
         <div className="aspect-square w-full max-w-md mx-auto mb-6 bg-gray-100 rounded-lg overflow-hidden">

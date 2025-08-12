@@ -26,7 +26,8 @@ export default async function Results({
 
   try {
     const res = await fetch(
-      `https://dummyjson.com/products/search?q=${searchTerm ?? ''}&limit=${limit}&skip=${skip}`
+      `https://dummyjson.com/products/search?q=${searchTerm ?? ''}&limit=${limit}&skip=${skip}`,
+      { next: { revalidate: 300 } }
     );
     if (!res.ok) {
       return <div>Error: Failed to fetch data (status {res.status})</div>;

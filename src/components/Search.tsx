@@ -10,8 +10,6 @@ export default function Search() {
   const path = usePathname();
   const searchParams = useSearchParams();
 
-  console.log('path', path);
-
   const [inputValue, setInputValue] = useLocalStorage<string>('searchTerm', '');
 
   function submitHandler(e: FormEvent<HTMLFormElement>) {
