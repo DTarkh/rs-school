@@ -1,5 +1,5 @@
-import Link from 'next/link';
-export const dynamic = 'force-dynamic';
+import { Link } from '../../../../../../i18n/navigation';
+
 export default async function ProductDetailsPage({
   params,
   searchParams,

@@ -3,12 +3,15 @@
 import { type FormEvent, type ChangeEvent } from 'react';
 import Button from './Button';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from '../i18n/navigation';
+import { useTranslations } from 'next-intl';
 
 export default function Search() {
   const router = useRouter();
   const path = usePathname();
   const searchParams = useSearchParams();
+  const t = useTranslations();
 
   const [inputValue, setInputValue] = useLocalStorage<string>('searchTerm', '');
 
@@ -38,7 +41,7 @@ export default function Search() {
         type="text"
         className="border rounded-xl outline-fuchsia-600 text-zinc-800 px-[10px] py-[7px] w-full border-gray-400 mr-2"
       />
-      <Button data-testid="search-button">Search</Button>
+      <Button data-testid="search-button">{t('search')}</Button>
     </form>
   );
 }

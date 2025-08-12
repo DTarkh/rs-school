@@ -2,8 +2,9 @@
 
 import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
-import Button from '../../../components/Button';
-import Search from '../../../components/Search';
+import Button from '../../../../components/Button';
+import Search from '../../../../components/Search';
+import { useTranslations } from 'next-intl';
 
 interface ProductsLayoutClientProps {
   children: ReactNode;
@@ -17,10 +18,10 @@ export default function ProductsLayoutClient({
   details,
 }: ProductsLayoutClientProps) {
   const pathname = usePathname();
+  const t = useTranslations();
 
-  // Check if we're on a product detail page (has an ID parameter)
   const isDetailPage =
-    pathname !== '/products' && pathname.startsWith('/products/');
+    pathname !== '/products' && pathname?.startsWith('/products/');
 
   return (
     <>
@@ -31,7 +32,7 @@ export default function ProductsLayoutClient({
       <div className="layout mt-[20px]">
         <div className="flex justify-between items-center pb-3">
           <h1 className="text-2xl pb-[10px] text-start font-semibold">
-            Results
+            {t('results')}
           </h1>
           <Button>Trigger Error</Button>
         </div>

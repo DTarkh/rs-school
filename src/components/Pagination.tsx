@@ -1,6 +1,8 @@
 'use client';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from '../i18n/navigation';
+import { useTranslations } from 'next-intl';
 
 export default function Pagination({
   page,
@@ -14,6 +16,7 @@ export default function Pagination({
   const router = useRouter();
   const searchParams = useSearchParams();
   const path = usePathname();
+  const t = useTranslations();
 
   const totalPages = Math.ceil(total / limit);
 
@@ -37,7 +40,7 @@ export default function Pagination({
         disabled={page === 1}
         className={clsForButton}
       >
-        Prev
+        {t('prev')}
       </button>
       <span>
         {page} of {totalPages}
@@ -47,7 +50,7 @@ export default function Pagination({
         disabled={page === totalPages}
         className={clsForButton}
       >
-        Next
+        {t('next')}
       </button>
     </div>
   );

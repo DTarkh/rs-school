@@ -4,8 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { itemsActions } from '../store/items/itemSlice';
 
 import type { ItemsState } from '../store/items/itemSlice';
-import Link from 'next/link';
+
 import { useSearchParams } from 'next/navigation';
+import { Link } from '../i18n/navigation';
+import { useTranslations } from 'next-intl';
 
 type Items = {
   items: ItemsState;
@@ -22,6 +24,7 @@ export default function ResultsItem({ id, title, image }: ItemProps) {
   const dispatch = useDispatch();
   const items = useSelector((state: Items) => state.items.items);
   const searchParams = useSearchParams();
+  const t = useTranslations();
 
   const isChecked = items.some((item) => item.id === id);
 
@@ -63,7 +66,7 @@ export default function ResultsItem({ id, title, image }: ItemProps) {
             href={`/products/${id}?${new URLSearchParams(searchParams).toString()}`}
             className="hover:text-fuchsia-600 transition-all"
           >
-            See Details{' '}
+            {t('seeDetails')}{' '}
           </Link>
           <input
             data-testid="checkbox"

@@ -1,7 +1,11 @@
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin(/* optional config file path */);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  distDir: './dist', // Changes the build output directory to `./dist/`.
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH, // Sets the base path to `/some-base-path`.
+  distDir: './dist',
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH,
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

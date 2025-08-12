@@ -7,8 +7,8 @@ export default function Home() {
     const searchTerm = JSON.parse(localStorage.getItem('searchTerm') || '""');
     const url =
       searchTerm && searchTerm.trim() !== ''
-        ? `products?page=1&search=${searchTerm}`
-        : 'products?page=1&search=';
+        ? `en/products?page=1&search=${searchTerm}`
+        : 'en/products?page=1&search=';
 
     return redirect(url);
   }
