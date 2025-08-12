@@ -2,11 +2,9 @@
 
 import { useDispatch, useSelector } from 'react-redux';
 import { itemsActions } from '../store/items/itemSlice';
-
 import type { ItemsState } from '../store/items/itemSlice';
-
 import { useSearchParams } from 'next/navigation';
-import { Link } from '../i18n/navigation';
+import { Link, usePathname } from '../i18n/navigation';
 import { useTranslations } from 'next-intl';
 
 type Items = {
@@ -49,6 +47,9 @@ export default function ResultsItem({ id, title, image }: ItemProps) {
       localStorage.setItem('items', JSON.stringify([...updatedItems]));
     }
   }
+  const currentPath = usePathname();
+  const params = new URLSearchParams(searchParams?.toString() ?? '');
+  params.set('id', String(id));
 
   return (
     <div className="flex items-center space-x-4 bg-white rounded-lg shadow-sm border hover:bg-gray-100  p-4">
@@ -63,7 +64,10 @@ export default function ResultsItem({ id, title, image }: ItemProps) {
         </h3>
         <div className="flex gap-7 ">
           <Link
-            href={`/products/${id}?${new URLSearchParams(searchParams).toString()}`}
+            href={{
+              pathname: currentPath,
+              query: Object.fromEntries(params.entries()),
+            }}
             className="hover:text-fuchsia-600 transition-all"
           >
             {t('seeDetails')}{' '}

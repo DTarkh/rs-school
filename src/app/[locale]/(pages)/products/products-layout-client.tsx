@@ -1,10 +1,10 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
 import Button from '../../../../components/Button';
 import Search from '../../../../components/Search';
 import { useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/dist/client/components/navigation';
 
 interface ProductsLayoutClientProps {
   children: ReactNode;
@@ -17,11 +17,10 @@ export default function ProductsLayoutClient({
   list,
   details,
 }: ProductsLayoutClientProps) {
-  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const t = useTranslations();
 
-  const isDetailPage =
-    pathname !== '/products' && pathname?.startsWith('/products/');
+  const isDetailPage = !!searchParams?.get('id');
 
   return (
     <>
