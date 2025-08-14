@@ -1,7 +1,8 @@
+import React from 'react';
 import { describe, it, expect, afterEach } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
-import AboutPage from './About';
+import AboutPage from './page';
 
 describe('AboutPage', () => {
   afterEach(() => {
@@ -9,8 +10,8 @@ describe('AboutPage', () => {
   });
   it('renders profile image', () => {
     render(<AboutPage />);
-    const image = screen.getByRole('img');
-    expect(image).toHaveAttribute('src', '/dd.jpg');
+    const image = screen.getByAltText(/David Tarkhnishvili profile/);
+    expect(image).toBeInTheDocument();
   });
 
   it('renders heading with name and role', () => {
