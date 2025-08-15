@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import Button from '../../../../components/Button';
 import Search from '../../../../components/Search';
 import { useTranslations } from 'next-intl';
@@ -19,8 +19,13 @@ export default function ProductsLayoutClient({
 }: ProductsLayoutClientProps) {
   const searchParams = useSearchParams();
   const t = useTranslations();
+  const [triggerError, setTriggerError] = useState(false);
 
   const isDetailPage = !!searchParams?.get('id');
+
+  if (triggerError) {
+    throw new Error('You triggered error!');
+  }
 
   return (
     <>
@@ -33,7 +38,7 @@ export default function ProductsLayoutClient({
           <h1 className="text-2xl pb-[10px] text-start font-semibold">
             {t('results')}
           </h1>
-          <Button>Trigger Error</Button>
+          <Button onClick={() => setTriggerError(true)}>Trigger Error</Button>
         </div>
 
         {isDetailPage ? (
