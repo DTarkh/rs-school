@@ -1,7 +1,7 @@
 import '../../globals.css';
-import Providers from './providers'; // client wrapper
-import Header from '../../components/Header'; // can be client or server
-import Menu from '../../components/Menu'; // can be client or server
+import Providers from './providers';
+import Header from '../../components/Header';
+import Menu from '../../components/Menu';
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from '../../i18n/routing';

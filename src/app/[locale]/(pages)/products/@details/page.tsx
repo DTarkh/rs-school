@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link } from '../../../../../i18n/navigation';
 import { toPlainQuery } from '../../../../../../util/utils';
 
