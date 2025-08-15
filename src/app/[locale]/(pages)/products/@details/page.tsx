@@ -6,7 +6,7 @@ export default async function ProductDetailsPage({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const { id } = searchParams;
+  const { id } = await searchParams;
 
   const res = await fetch(`https://dummyjson.com/products/${id}`, {
     next: { revalidate: 300 },

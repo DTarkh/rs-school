@@ -5,12 +5,13 @@ import { withCurrentQuery } from '../../util/utils';
 import { useTranslations } from 'next-intl';
 import { Link } from '../i18n/navigation';
 import LanguageSwitch from './LanguageSwitch';
+import Themeswitch from './ThemeSwitch';
 
 export default function Header() {
   const searchParams = useSearchParams();
   const t = useTranslations();
   return (
-    <header className="bg-white/80 backdrop-blur-md shadow-lg border-b border-gray-100 z-50 w-full fixed top-0 flex justify-center items-center h-[60px]">
+    <header className="bg-white/80 dark:bg-amber-700 backdrop-blur-md shadow-lg border-b border-gray-100 z-50 w-full fixed top-0 flex justify-center items-center h-[60px]">
       <nav className="layout w-full flex justify-between items-center">
         <ul className="flex items-center justify-center gap-2 py-4">
           <li>
@@ -30,8 +31,10 @@ export default function Header() {
             </Link>
           </li>
         </ul>
-        <LanguageSwitch />
-        {/* <Themeswitch /> */}
+        <div className="space-x-2">
+          <LanguageSwitch />
+          <Themeswitch />
+        </div>
       </nav>
     </header>
   );

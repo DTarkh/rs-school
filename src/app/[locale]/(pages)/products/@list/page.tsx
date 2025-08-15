@@ -5,7 +5,7 @@ export default async function HomePage({
 }: {
   searchParams: { page?: string; search?: string };
 }) {
-  const { search, page } = searchParams;
+  const { search, page } = await searchParams;
 
   return (
     <>

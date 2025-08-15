@@ -6,6 +6,7 @@ import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from '../../i18n/routing';
 import { getMessages } from 'next-intl/server';
+import { cookies as nextCookies } from 'next/headers';
 
 export default async function RootLayout({
   children,
@@ -20,15 +21,18 @@ export default async function RootLayout({
   }
   const messages = await getMessages();
 
+  const theme = (await cookies()).get('theme')?.value;
+  const darkMode = theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50';
+
   return (
     <html lang={locale}>
       <NextIntlClientProvider locale={locale} messages={messages}>
         <body>
-          <Providers>
+          <Providers initialTheme={theme === 'dark' ? 'dark' : 'light'}>
             <Header />
             <main
               id="root"
-              className="bg-gray-50 w-full min-h-screen flex flex-col items-center justify-center p-6"
+              className={` ${darkMode} w-full min-h-screen flex flex-col items-center justify-center p-6`}
             >
               <Menu />
               {children}
@@ -38,4 +42,7 @@ export default async function RootLayout({
       </NextIntlClientProvider>
     </html>
   );
+}
+function cookies() {
+  return nextCookies();
 }

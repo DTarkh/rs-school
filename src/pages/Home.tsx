@@ -4,19 +4,14 @@ import Results from '../components/Results';
 import ErrorBoundary from '../components/ErrorBoundary';
 import { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { useLocalStorage } from '../hooks/useLocalStorage';
 
 export default function HomePage() {
   const [triggerError, setTriggerError] = useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = useLocalStorage('searchTerm', '');
 
   const location = useLocation();
 
   const isInSplitView = location.pathname.includes('/product/');
 
-  function handleSubmit(value: string) {
-    setSearchTerm(value);
-  }
   function onTriggerError() {
     setTriggerError(true);
   }
@@ -24,7 +19,7 @@ export default function HomePage() {
   return (
     <>
       <div className="layout border p-4 rounded-xl border-gray-400 bg-white mt-[75px]">
-        <Search onSubmit={handleSubmit} />
+        <Search />
       </div>
       <ErrorBoundary>
         <div className="layout mt-[20px]">
