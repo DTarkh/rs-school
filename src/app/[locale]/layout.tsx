@@ -7,6 +7,13 @@ import { notFound } from 'next/navigation';
 import { routing } from '../../i18n/routing';
 import { getMessages } from 'next-intl/server';
 import { cookies as nextCookies } from 'next/headers';
+import { Metadata } from 'next';
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const metadata: Metadata = {
+  title: 'RS-React-App',
+  description: 'Learn React',
+};
 
 export default async function RootLayout({
   children,

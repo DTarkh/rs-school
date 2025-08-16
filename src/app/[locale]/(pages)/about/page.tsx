@@ -11,9 +11,9 @@ export default function AboutPage() {
               <Image
                 src="/dd.jpg"
                 alt="David Tarkhnishvili profile"
-                width={200}
+                width={400}
                 height={200}
-                objectFit="cover"
+                priority
               />
             </div>
             <div className="flex flex-col gap-2">
