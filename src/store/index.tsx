@@ -1,3 +1,5 @@
+'use client';
+
 import { configureStore } from '@reduxjs/toolkit';
 import itemsReducer from './items/itemSlice';
 import { productsApiSlice } from './products/productsApiSlice';

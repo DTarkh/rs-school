@@ -1,37 +1,55 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
-type ThemeContextType = {
-  theme: string;
+'use client';
+
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+  startTransition,
+} from 'react';
+import { useRouter } from 'next/navigation';
+import type { Theme } from '../actions/theme';
+import { setThemeCookie } from '../actions/theme';
+
+type ThemeCtx = {
+  theme: Theme;
+  setTheme: (t: Theme) => void;
   toggleTheme: () => void;
 };
 
-type Props = {
-  children: ReactNode;
-};
-
-const initialTheme = localStorage.getItem('theme') || '';
-
-const ThemeContext = createContext<ThemeContextType>({
-  theme: initialTheme,
+const ThemeContext = createContext<ThemeCtx>({
+  theme: 'light',
+  setTheme: () => {},
   toggleTheme: () => {},
 });
 
-export function ThemeProvider({ children }: Props) {
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('theme') || 'light';
-  });
+export function ThemeProvider({
+  initialTheme,
+  children,
+}: {
+  initialTheme: Theme;
+  children: React.ReactNode;
+}) {
+  const [theme, setThemeState] = useState<Theme>(initialTheme);
+  const router = useRouter();
 
-  function toggleTheme() {
-    setTheme((prev: string) => {
-      const newTheme = prev === 'light' ? 'dark' : 'light';
-      localStorage.setItem('theme', newTheme);
-      return newTheme;
+  const setTheme = (t: Theme) => {
+    setThemeState(t);
+
+    document.documentElement.classList.toggle('dark', t === 'dark');
+
+    startTransition(async () => {
+      await setThemeCookie(t);
+      router.refresh();
     });
-  }
+  };
 
-  const values = { theme, toggleTheme };
+  const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
+
+  const value = useMemo(() => ({ theme, setTheme, toggleTheme }), [theme]);
 
   return (
-    <ThemeContext.Provider value={values}>{children}</ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
 }
 // eslint-disable-next-line react-refresh/only-export-components

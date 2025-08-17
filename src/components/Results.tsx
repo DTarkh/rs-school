@@ -1,86 +1,65 @@
-import ResultItem from './ResultItem';
 import Pagination from './Pagination';
-import { useLocation } from 'react-router-dom';
-import { useGetProductsQuery } from '../store/products/productsApiSlice';
-import Spinner from './Spinner';
-import Button from './Button';
-import ErrorMessage from './ErrorMessage';
+import ResultItem from './ResultItem';
 
-type Props = {
-  searchTerm: string;
-  tirggerError: boolean;
-};
-
-export type Item = {
+type Item = {
   id: number;
   title: string;
-  description: string;
   thumbnail: string;
 };
 
-export default function Results({ searchTerm, tirggerError }: Props) {
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
+type APIResponse = {
+  products: Item[];
+  total: number;
+};
 
-  const pageParam = parseInt(params.get('page') || '1', 10);
-  const page = isNaN(pageParam) || pageParam < 1 ? 1 : pageParam;
+export default async function Results({
+  searchTerm,
+  page,
+}: {
+  searchTerm?: string;
+  page?: number;
+}) {
+  let data: APIResponse | null = null;
 
   const limit = 5;
-  const skip = (page - 1) * limit;
+  const skip = (page ? page - 1 : 0) * limit;
 
-  const { data, isFetching, isError, error, refetch } = useGetProductsQuery({
-    searchTerm,
-    skip,
-    limit,
-  });
+  try {
+    const res = await fetch(
+      `https://dummyjson.com/products/search?q=${searchTerm ?? ''}&limit=${limit}&skip=${skip}`,
+      { next: { revalidate: 300 } }
+    );
+    if (!res.ok) {
+      return <div>Error: Failed to fetch data (status {res.status})</div>;
+    }
+    data = (await res.json()) as APIResponse;
+  } catch (err) {
+    return <div>Error: {String(err)}</div>;
+  }
 
-  if (tirggerError) {
-    throw new Error('An undexpected error occurred.');
+  if (!data || data.products.length === 0) {
+    return (
+      <div className="border rounded-md p-3 h-[600px] flex items-center justify-center">
+        <p>No results found for &quot;{searchTerm}&quot;.</p>
+      </div>
+    );
   }
 
   return (
     <>
-      <div className="border rounded-md  p-3 h-[600px]">
-        {isFetching && (
-          <div
-            className="w-full  flex justify-center items-center h-full"
-            data-testid="loading"
-          >
-            <Spinner />
-          </div>
-        )}
-        {isError && (
-          <div className="w-full  flex justify-center items-center h-full">
-            <ErrorMessage error={error} />
-          </div>
-        )}
-        {!isFetching && data && data.products.length === 0 && (
-          <div className="w-full  flex items-center justify-center h-full">
-            <p>No results found for &quot;{searchTerm}&quot;.</p>
-          </div>
-        )}
-        <div className="grid grid-cols-1 gap-4  overflow-y-auto">
-          {!isFetching &&
-            data &&
-            data.products.map((product) => (
-              <ResultItem
-                key={product.id}
-                id={product.id}
-                title={product.title}
-                image={product.thumbnail}
-                page={page}
-              />
-            ))}
+      <div className="border rounded-md p-3 h-[600px]">
+        <div className="grid grid-cols-1 gap-4 overflow-y-auto">
+          {data.products.map((p) => (
+            <ResultItem
+              key={p.id}
+              id={p.id}
+              title={p.title}
+              image={p.thumbnail}
+            />
+          ))}
         </div>
       </div>
-      <div className="h-[35px] mt-[25px]">
-        {data && !isFetching && data.products.length !== 0 && (
-          <Pagination page={page} total={data.total} limit={limit} />
-        )}
-      </div>
-      <Button onClick={() => refetch()} disabled={isFetching}>
-        {isFetching ? 'Refreshing...' : 'Refresh'}
-      </Button>
+      <Pagination page={page || 1} total={data.total} limit={5} />
     </>
   );
 }

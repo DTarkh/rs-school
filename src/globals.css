@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+
+.layout {
+  @apply w-[calc(375px-20px)] sm:w-[540px] md:w-[720px] lg:w-[1000px] xl:w-[1225px];
+}

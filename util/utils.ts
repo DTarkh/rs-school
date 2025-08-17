@@ -1,4 +1,6 @@
-type Items = {
+import { ReadonlyURLSearchParams } from 'next/navigation';
+
+export type Items = {
   [key: string]: string | number;
   id: number;
   title: string;
@@ -6,13 +8,21 @@ type Items = {
   quantity: number;
 };
 
-export function convertToCSV(items: Items[]) {
-  if (items.length === 0) return '';
-
-  const headers = Object.keys(items[0]);
-  const rows = items.map((item) =>
-    headers.map((header) => JSON.stringify(item[header] ?? '')).join(',')
+export function convertToCSV(data: Items[]) {
+  if (!data.length) return '';
+  const headers = Object.keys(data[0]);
+  const rows = data.map((obj) =>
+    headers
+      .map((h) => `"${String(obj[h] ?? '').replace(/"/g, '""')}"`)
+      .join(',')
   );
-
   return [headers.join(','), ...rows].join('\n');
+}
+
+export function withCurrentQuery(
+  pathname: string,
+  sp: ReadonlyURLSearchParams | null
+) {
+  const query = sp ? sp.toString() : '';
+  return query ? `${pathname}?${query}` : pathname;
 }
