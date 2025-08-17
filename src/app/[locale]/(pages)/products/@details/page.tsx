@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from '../../../../../i18n/navigation';
-import { toPlainQuery } from '../../../../../../util/utils';
 import Image from 'next/image';
 
 export default async function ProductDetailsPage({
@@ -22,13 +21,11 @@ export default async function ProductDetailsPage({
     return <div>Error: Product not found.</div>;
   }
 
-  const queryWithoutId = toPlainQuery(searchParams, ['id']);
-
   return (
     <div className="p-6 h-full">
       <>
         <Link
-          href={{ pathname: '/products', query: queryWithoutId }}
+          href={{ pathname: '/products', query: id?.toString() }}
           className="hover:underline"
         >
           Back to Products
