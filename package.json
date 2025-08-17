@@ -8,9 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "format:fix": "prettier --write .",
-    "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "format:fix": "prettier --write ."
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
