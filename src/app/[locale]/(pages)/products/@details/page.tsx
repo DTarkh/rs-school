@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from '../../../../../i18n/navigation';
 import { toPlainQuery } from '../../../../../../util/utils';
+import Image from 'next/image';
 
 export default async function ProductDetailsPage({
   searchParams,
@@ -33,9 +34,11 @@ export default async function ProductDetailsPage({
           Back to Products
         </Link>
         <div className="aspect-square w-full max-w-md mx-auto mb-6 bg-gray-100 rounded-lg overflow-hidden">
-          <img
+          <Image
             src={data.thumbnail}
             alt={data.title}
+            width={200}
+            height={200}
             className="w-full h-full object-cover"
           />
         </div>

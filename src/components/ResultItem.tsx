@@ -6,6 +6,7 @@ import type { ItemsState } from '../store/items/itemSlice';
 import { useSearchParams } from 'next/navigation';
 import { Link, usePathname } from '../i18n/navigation';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 
 type Items = {
   items: ItemsState;
@@ -53,9 +54,11 @@ export default function ResultsItem({ id, title, image }: ItemProps) {
 
   return (
     <div className="flex items-center space-x-4 bg-white rounded-lg shadow-sm border hover:bg-gray-100  p-4">
-      <img
+      <Image
         src={image}
         alt={title}
+        width={200}
+        height={200}
         className="w-16 h-16 object-cover rounded-md flex-shrink-0"
       />
       <div className="flex flex-col gap-3">
