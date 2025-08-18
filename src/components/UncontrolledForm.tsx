@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import ImageUpload from './ImageUpload';
 
 export default function UncontrolledForm({
   setOpen,
@@ -7,6 +8,7 @@ export default function UncontrolledForm({
 }) {
   const nameRef = useRef<HTMLInputElement | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
+  const [reset, setReset] = useState(false);
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -204,6 +206,7 @@ export default function UncontrolledForm({
           />
           <span>I accept the terms and conditions</span>
         </label>
+        <ImageUpload resetPriview={reset} />
 
         <div className="flex flex-col">
           <label
@@ -228,6 +231,7 @@ export default function UncontrolledForm({
           <button
             type="button"
             onClick={() => {
+              setReset((prev) => !prev);
               setOpen(false);
               setErrors([]);
             }}
