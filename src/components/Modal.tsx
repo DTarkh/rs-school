@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 
 export default function Modal({
   open,
@@ -23,7 +24,7 @@ export default function Modal({
     }
   }, [open]);
 
-  return (
+  return createPortal(
     <dialog
       className="w-[400px] h-[200px] bg-gray-300 backdrop:bg-black/50"
       ref={modalRef}
@@ -39,6 +40,8 @@ export default function Modal({
           Close
         </button>
       </div>
-    </dialog>
+    </dialog>,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    document.getElementById('modal')!
   );
 }
