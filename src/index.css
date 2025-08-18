@@ -2,8 +2,11 @@
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  padding: 0;
+}
+
+dialog[open]:modal {
+  position: fixed;
+  inset: 0;
+  margin: auto;
 }
