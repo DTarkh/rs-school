@@ -26,20 +26,11 @@ export default function Modal({
 
   return createPortal(
     <dialog
-      className="w-[400px] h-[200px] bg-gray-300 backdrop:bg-black/50"
+      className="min-w-[400px] bg-gray-300 backdrop:bg-black/50"
       ref={modalRef}
       onClose={() => setOpen(false)}
     >
-      Modal
       {children}
-      <div className="w-full flex justify-end">
-        <button
-          onClick={() => setOpen(false)}
-          className="px-4 py-1 bg-amber-400 text-amber-50 cursor-pointer"
-        >
-          Close
-        </button>
-      </div>
     </dialog>,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     document.getElementById('modal')!

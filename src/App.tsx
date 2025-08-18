@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import Button from './components/Button';
 import Modal from './components/Modal';
+import UncontrolledForm from './components/UncontrolledForm';
+import ReactHookForm from './components/ReactHookForm';
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,10 +10,10 @@ function App() {
   return (
     <>
       <Modal open={isOpen} setOpen={setIsOpen}>
-        FirsModal
+        <UncontrolledForm setOpen={setIsOpen} />
       </Modal>
       <Modal open={isHookformOpen} setOpen={setIsHookformOpen}>
-        SecondModal
+        <ReactHookForm setOpen={setIsHookformOpen} />
       </Modal>
       <main className="bg-gray-800 w-full h-screen flex flex-col items-center">
         <div className="flex gap-7 mt-20">
