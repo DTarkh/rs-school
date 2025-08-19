@@ -11,7 +11,6 @@ export default function Modal({
   children: ReactNode;
 }) {
   const modalRef = useRef<HTMLDialogElement | null>(null);
-  console.log(open);
 
   useEffect(() => {
     const modal = modalRef.current;

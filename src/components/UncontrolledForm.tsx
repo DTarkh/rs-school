@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react';
 import ImageUpload from './ImageUpload';
+import { FormActions } from '../store/formDataSlice';
+import { useDispatch } from 'react-redux';
 
 export default function UncontrolledForm({
   setOpen,
@@ -9,6 +11,8 @@ export default function UncontrolledForm({
   const nameRef = useRef<HTMLInputElement | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
   const [reset, setReset] = useState(false);
+
+  const dispatch = useDispatch();
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -20,7 +24,7 @@ export default function UncontrolledForm({
     const ageStr = String(fd.get('age') || '');
     const email = String(fd.get('email') || '');
     const password = String(fd.get('password') || '');
-    const confirm = String(fd.get('confirm-password') || '');
+    const confirm = String(fd.get('confirmPassword') || '');
     const gender = String(fd.get('gender') || '');
     const country = String(fd.get('country') || '');
     const termsChecked = fd.get('terms') !== null;
@@ -75,13 +79,29 @@ export default function UncontrolledForm({
       name,
       age: ageStr,
       email,
+      password,
+      confirm,
       gender,
       country,
       termsChecked,
     });
 
+    dispatch(
+      FormActions.Add({
+        name,
+        age: ageStr,
+        email,
+        password,
+        confirmPassword: confirm,
+        gender,
+        country,
+        terms: termsChecked,
+      })
+    );
+
     form.reset();
     nameRef.current?.focus();
+    setReset((r) => !r);
     setErrors([]);
     setOpen(false);
   }
@@ -163,15 +183,15 @@ export default function UncontrolledForm({
           </div>
           <div className="flex flex-col">
             <label
-              htmlFor="confirm-password"
+              htmlFor="confirmPassword"
               className="mb-1 text-sm font-medium text-gray-700"
             >
               Confirm Password
             </label>
             <input
               type="password"
-              name="confirm-password"
-              id="confirm-password"
+              name="confirmPassword"
+              id="confirmPassword"
               className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-400"
             />
           </div>
@@ -206,7 +226,7 @@ export default function UncontrolledForm({
           />
           <span>I accept the terms and conditions</span>
         </label>
-        <ImageUpload resetPriview={reset} />
+        <ImageUpload resetTrigger={reset} />
 
         <div className="flex flex-col">
           <label
@@ -231,7 +251,7 @@ export default function UncontrolledForm({
           <button
             type="button"
             onClick={() => {
-              setReset((prev) => !prev);
+              setReset((r) => !r);
               setOpen(false);
               setErrors([]);
             }}

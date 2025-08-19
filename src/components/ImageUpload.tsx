@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { FormActions } from '../store/formDataSlice';
 
 type Props = {
   name?: string;
   maxSizeMB?: number;
-  resetPriview: boolean;
+  resetTrigger?: boolean;
 };
 
 const allowedMimes = ['image/png', 'image/jpeg'];
@@ -24,17 +26,18 @@ function toBase64(file: File): Promise<string> {
 export default function ImageUpload({
   name = 'avatar',
   maxSizeMB = 2,
-  resetPriview,
+  resetTrigger,
 }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (inputRef.current) inputRef.current.value = '';
     setError(null);
     setPreview(null);
-  }, [resetPriview]);
+  }, [resetTrigger]);
 
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setError(null);
@@ -69,6 +72,15 @@ export default function ImageUpload({
       size: file.size,
       base64,
     });
+
+    dispatch(
+      FormActions.setImage({
+        base64,
+        mime: file.type,
+        name: file.name,
+        size: file.size,
+      })
+    );
   }
 
   return (

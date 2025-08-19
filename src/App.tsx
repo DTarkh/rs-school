@@ -3,6 +3,7 @@ import Button from './components/Button';
 import Modal from './components/Modal';
 import UncontrolledForm from './components/UncontrolledForm';
 import ReactHookForm from './components/ReactHookForm';
+import FormDataOutput from './components/FormDataOutput';
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,6 +23,7 @@ function App() {
             React hook Form
           </Button>
         </div>
+        <FormDataOutput />
       </main>
     </>
   );
