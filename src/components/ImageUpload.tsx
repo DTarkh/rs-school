@@ -1,17 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { FormActions } from '../store/formDataSlice';
 
 type Props = {
   name?: string;
   maxSizeMB?: number;
   resetTrigger?: boolean;
+  onSelect: (file: File | null) => void;
 };
 
 const allowedMimes = ['image/png', 'image/jpeg'];
 const allowedExts = ['.png', '.jpg', '.jpeg'];
 
-function toBase64(file: File): Promise<string> {
+export function toBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = () => reject(new Error('Failed to read file'));
@@ -27,17 +26,18 @@ export default function ImageUpload({
   name = 'avatar',
   maxSizeMB = 2,
   resetTrigger,
+  onSelect,
 }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (inputRef.current) inputRef.current.value = '';
     setError(null);
     setPreview(null);
-  }, [resetTrigger]);
+    onSelect(null);
+  }, [resetTrigger, onSelect]);
 
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setError(null);
@@ -64,23 +64,9 @@ export default function ImageUpload({
       return;
     }
 
-    const base64 = await toBase64(file);
-    setPreview(`data:${file.type};base64,${base64}`);
-    console.log('Image OK:', {
-      name: file.name,
-      type: file.type,
-      size: file.size,
-      base64,
-    });
-
-    dispatch(
-      FormActions.setImage({
-        base64,
-        mime: file.type,
-        name: file.name,
-        size: file.size,
-      })
-    );
+    const url = URL.createObjectURL(file);
+    setPreview(url);
+    onSelect(file);
   }
 
   return (

@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react';
-import ImageUpload from './ImageUpload';
+import { useCallback, useRef, useState } from 'react';
+import ImageUpload, { toBase64 } from './ImageUpload';
 import { FormActions } from '../store/formDataSlice';
 import { useDispatch } from 'react-redux';
 
@@ -11,10 +11,15 @@ export default function UncontrolledForm({
   const nameRef = useRef<HTMLInputElement | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
   const [reset, setReset] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const dispatch = useDispatch();
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const handleImageSelect = useCallback((file: File | null) => {
+    setImageFile(file);
+  }, []);
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const form = e.currentTarget;
@@ -67,6 +72,8 @@ export default function UncontrolledForm({
     if (!termsChecked)
       nextErrors.push('You must accept the terms and conditions');
 
+    if (!imageFile) nextErrors.push('Please upload a picture');
+
     if (!country) nextErrors.push('Please select a country');
 
     setErrors(nextErrors);
@@ -85,6 +92,19 @@ export default function UncontrolledForm({
       country,
       termsChecked,
     });
+
+    let imagePayload = null;
+    if (imageFile) {
+      const base64 = await toBase64(imageFile);
+      imagePayload = {
+        base64,
+        mime: imageFile.type,
+        name: imageFile.name,
+        size: imageFile.size,
+      };
+    }
+
+    dispatch(FormActions.setImage(imagePayload));
 
     dispatch(
       FormActions.Add({
@@ -226,7 +246,7 @@ export default function UncontrolledForm({
           />
           <span>I accept the terms and conditions</span>
         </label>
-        <ImageUpload resetTrigger={reset} />
+        <ImageUpload resetTrigger={reset} onSelect={handleImageSelect} />
 
         <div className="flex flex-col">
           <label
