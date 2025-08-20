@@ -1,14 +1,19 @@
 import { useCallback, useRef, useState } from 'react';
 import ImageUpload, { toBase64 } from './ImageUpload';
 import { FormActions } from '../store/formDataSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FormSchema } from '../schema/uncontrolledFormSchema';
+import type { RootState } from '../store';
 
 export default function UncontrolledForm({
   setOpen,
 }: {
   setOpen: (val: boolean) => void;
 }) {
+  const countries = useSelector(
+    (state: RootState) => state.formData.formData.country
+  );
+
   const nameRef = useRef<HTMLInputElement | null>(null);
   const [reset, setReset] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -240,9 +245,9 @@ export default function UncontrolledForm({
             className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-400"
           >
             <option value=""></option>
-            <option>Kazakhstan</option>
-            <option>Georgia</option>
-            <option>England</option>
+            {(Array.isArray(countries) ? countries : [countries]).map((c) => (
+              <option key={c}>{c}</option>
+            ))}
           </select>
         </div>
 

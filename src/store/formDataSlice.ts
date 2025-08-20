@@ -9,7 +9,7 @@ export type FormDataFields = {
   confirmPassword: string;
   gender: string;
   terms: boolean;
-  country: string;
+  country: string[] | string;
 };
 
 export type ImageInfo = {
@@ -33,7 +33,7 @@ const initialState: State = {
     confirmPassword: '',
     gender: '',
     terms: false,
-    country: '',
+    country: ['Kazakhstan', 'Georgia', 'England'],
   },
   image: null,
 };
