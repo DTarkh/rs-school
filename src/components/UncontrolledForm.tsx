@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from 'react';
 import ImageUpload, { toBase64 } from './ImageUpload';
 import { FormActions } from '../store/formDataSlice';
 import { useDispatch } from 'react-redux';
+import { FormSchema } from '../schema/uncontrolledFormSchema';
 
 export default function UncontrolledForm({
   setOpen,
@@ -12,6 +13,8 @@ export default function UncontrolledForm({
   const [reset, setReset] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
+  const [formErrors, setFormErrors] = useState<string[]>([]);
+
   const dispatch = useDispatch();
 
   const handleImageSelect = useCallback((file: File | null) => {
@@ -20,18 +23,65 @@ export default function UncontrolledForm({
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setFormErrors([]);
 
     const form = e.currentTarget;
     const fd = new FormData(form);
 
-    const name = String(fd.get('name') || '');
-    const ageStr = String(fd.get('age') || '');
-    const email = String(fd.get('email') || '');
-    const password = String(fd.get('password') || '');
-    const confirm = String(fd.get('confirmPassword') || '');
-    const gender = String(fd.get('gender') || '');
-    const country = String(fd.get('country') || '');
-    const termsChecked = fd.get('terms') !== null;
+    const payload = {
+      name: String(fd.get('name') || ''),
+      age: Number(fd.get('age')),
+      email: String(fd.get('email') || ''),
+      password: String(fd.get('password') || ''),
+      confirmPassword: String(fd.get('confirmPassword') || ''),
+      gender: String(fd.get('gender') || ''),
+      country: String(fd.get('country') || '') as
+        | 'Kazakhstan'
+        | 'Georgia'
+        | 'England',
+      terms: fd.get('terms') !== null,
+      image: imageFile as File,
+    };
+
+    const result = FormSchema.safeParse(payload);
+
+    if (!result.success) {
+      const messages = result.error.issues.map((i) => i.message);
+      setFormErrors(messages);
+
+      const firstKey = result.error.issues[0]?.path[0];
+      if (typeof firstKey === 'string') {
+        const el = form.querySelector(
+          `[name="${firstKey}"]`
+        ) as HTMLElement | null;
+        el?.focus();
+      }
+      return;
+    }
+
+    const {
+      name,
+      age: ageStr,
+      email,
+      password,
+      confirmPassword: confirm,
+      gender,
+      country,
+      terms,
+    } = result.data;
+
+    dispatch(
+      FormActions.Add({
+        name,
+        age: String(ageStr),
+        email,
+        password,
+        confirmPassword: confirm,
+        gender,
+        country,
+        terms,
+      })
+    );
 
     console.log('Form OK:', {
       name,
@@ -41,7 +91,7 @@ export default function UncontrolledForm({
       confirm,
       gender,
       country,
-      termsChecked,
+      terms,
     });
 
     let imagePayload = null;
@@ -57,19 +107,6 @@ export default function UncontrolledForm({
 
     dispatch(FormActions.setImage(imagePayload));
 
-    dispatch(
-      FormActions.Add({
-        name,
-        age: ageStr,
-        email,
-        password,
-        confirmPassword: confirm,
-        gender,
-        country,
-        terms: termsChecked,
-      })
-    );
-
     form.reset();
     nameRef.current?.focus();
     setReset((r) => !r);
@@ -77,7 +114,7 @@ export default function UncontrolledForm({
   }
 
   return (
-    <div className="flex justify-center items-center p-6 bg-gray-100">
+    <div className="flex justify-center items-start p-6 bg-gray-100 gap-6">
       <form
         onSubmit={onSubmit}
         className="w-full max-w-md bg-white shadow-md rounded-lg p-6 space-y-4"
@@ -228,6 +265,20 @@ export default function UncontrolledForm({
           </button>
         </div>
       </form>
+      {formErrors.length > 0 && (
+        <div
+          className="bg-red-50 border border-red-300 text-red-700 rounded p-3"
+          role="alert"
+          aria-live="assertive"
+        >
+          <p className="font-semibold mb-2">Please fix the following errors:</p>
+          <ul className="list-disc pl-5 space-y-1 text-sm">
+            {formErrors.map((err, i) => (
+              <li key={i}>{err}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
