@@ -30,7 +30,7 @@ export const FormSchema = z
       message: 'Please choose country',
     }),
     terms: z.literal(true, { message: 'Accept terms to continue' }),
-    image: z.instanceof(File, { message: 'Please upload an image' }),
+    image: z.instanceof(File, { message: 'Please upload an image' }).optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords must match',
