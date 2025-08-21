@@ -78,7 +78,7 @@ export default function UncontrolledForm({
     dispatch(
       FormActions.Add({
         name,
-        age: String(ageStr),
+        age: ageStr,
         email,
         password,
         confirmPassword: confirm,

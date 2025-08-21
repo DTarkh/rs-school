@@ -3,7 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 
 export type FormDataFields = {
   name: string;
-  age: string;
+  age: number;
   email: string;
   password: string;
   confirmPassword: string;

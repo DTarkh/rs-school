@@ -3,7 +3,9 @@ import { z } from 'zod';
 import { FormSchema } from '../schema/uncontrolledFormSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useState } from 'react';
-import ImageUpload from './ImageUpload';
+import ImageUpload, { toBase64 } from './ImageUpload';
+import { FormActions } from '../store/formDataSlice';
+import { useDispatch } from 'react-redux';
 
 type Form = z.infer<typeof FormSchema>;
 
@@ -22,15 +24,33 @@ export default function ReactHookForm({
     criteriaMode: 'all',
   });
 
+  const dispatch = useDispatch();
+
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [resetFile, setResetFile] = useState(false);
   const handleImageSelect = useCallback((file: File | null) => {
     setImageFile(file);
   }, []);
 
-  const onSubmit = (data: Form) => {
+  const onSubmit = async (data: Form) => {
     console.log(data);
-    console.log('clicked');
+
+    dispatch(FormActions.Add(data));
+
+    let imagePayload = null;
+    if (imageFile) {
+      const base64 = await toBase64(imageFile);
+      imagePayload = {
+        base64,
+        mime: imageFile.type,
+        name: imageFile.name,
+        size: imageFile.size,
+      };
+    }
+
+    dispatch(FormActions.setImage(imagePayload));
+
+    setOpen(false);
     setResetFile((r) => !r);
     reset();
   };
