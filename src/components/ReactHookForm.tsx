@@ -255,6 +255,7 @@ export default function ReactHookForm({
 
         <div className="w-full flex justify-end gap-3">
           <button
+            type="button"
             onClick={() => setOpen(false)}
             className="px-4 py-1 bg-amber-400 text-amber-50 cursor-pointer"
           >
