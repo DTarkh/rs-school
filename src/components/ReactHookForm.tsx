@@ -17,11 +17,12 @@ export default function ReactHookForm({
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitted },
+    formState: { errors, isSubmitting, isSubmitted, isValid },
     reset,
   } = useForm<Form>({
     resolver: zodResolver(FormSchema),
     criteriaMode: 'all',
+    mode: 'onChange',
   });
 
   const dispatch = useDispatch();
@@ -262,9 +263,9 @@ export default function ReactHookForm({
             Close
           </button>
           <button
-            disabled={isSubmitting}
+            disabled={isSubmitting || !isValid || !imageFile}
             type="submit"
-            className="px-4 py-1 text-amber-50 cursor-pointer bg-fuchsia-700"
+            className="px-4 py-1 text-amber-50 cursor-pointer bg-fuchsia-700 disabled:bg-gray-400"
           >
             Submit
           </button>
