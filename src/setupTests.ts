@@ -21,3 +21,13 @@ if (typeof globalThis.HTMLDialogElement !== 'undefined') {
     };
   }
 }
+
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  const openDialog = document.querySelector(
+    'dialog[open]'
+  ) as HTMLDialogElement | null;
+  if (openDialog && typeof openDialog.close === 'function') {
+    openDialog.close();
+  }
+});
