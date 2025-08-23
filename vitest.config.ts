@@ -5,6 +5,7 @@ export default defineConfig({
     reporters: ['verbose'],
     silent: true,
     environment: 'jsdom',
+    setupFiles: ['src/setupTests.ts'],
     coverage: {
       include: ['src/**/*.{js,jsx,ts,tsx}'],
       exclude: [
