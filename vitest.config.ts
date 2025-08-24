@@ -2,13 +2,10 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    allowOnly: true,
     reporters: ['verbose'],
     silent: true,
     environment: 'jsdom',
-    deps: {
-      inline: ['next-intl'], // let Vitest process next-intl ESM
-    },
+    setupFiles: ['src/setupTests.ts'],
     coverage: {
       include: ['src/**/*.{js,jsx,ts,tsx}'],
       exclude: [

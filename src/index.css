@@ -1,0 +1,12 @@
+@import 'tailwindcss';
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+dialog[open]:modal {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+}

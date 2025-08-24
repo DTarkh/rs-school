@@ -1,19 +1,16 @@
+import type { ReactNode } from 'react';
+
 export default function Button({
   children,
   onClick,
-  disabled,
-  ...props
 }: {
-  children: React.ReactNode;
-  onClick?: () => void;
-  disabled?: boolean;
+  children: ReactNode;
+  onClick: () => void;
 }) {
   return (
     <button
-      {...props}
+      className="bg-amber-600 px-5 py-2 text-amber-50 cursor-pointer"
       onClick={onClick}
-      disabled={disabled}
-      className="bg-zinc-700 px-3 rounded-xl text-zinc-200 py-[7px] hover:bg-zinc-600 transition-all cursor-pointer"
     >
       {children}
     </button>

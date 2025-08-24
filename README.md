@@ -67,5 +67,3 @@ export default tseslint.config([
   },
 ]);
 ```
-
-# rs-school
