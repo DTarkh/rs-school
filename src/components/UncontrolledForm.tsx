@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
-import ImageUpload, { toBase64 } from './ImageUpload';
+import ImageUpload from './ImageUpload';
+import { toBase64 } from '../util/util';
 import { FormActions } from '../store/formDataSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormSchema } from '../schema/uncontrolledFormSchema';

@@ -3,7 +3,8 @@ import { z } from 'zod';
 import { FormSchema } from '../schema/uncontrolledFormSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useState } from 'react';
-import ImageUpload, { toBase64 } from './ImageUpload';
+import ImageUpload from './ImageUpload';
+import { toBase64 } from '../util/util';
 import { FormActions } from '../store/formDataSlice';
 import { useDispatch } from 'react-redux';
 
