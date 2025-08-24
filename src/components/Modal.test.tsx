@@ -38,7 +38,7 @@ describe('Uncontrolled form', () => {
     );
 
     const openBtn = screen.getByRole('button', { name: /uncontrolled form/i });
-    openBtn.click();
+    await userEvent.click(openBtn);
 
     const dialog = await screen.findByRole('dialog');
     expect(dialog).toBeInTheDocument();
